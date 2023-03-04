@@ -3,7 +3,7 @@ locals {
   cluster_version = "1.25"
   region          = "eu-central-2"
 
-  instance_types = ["t3.micro"]
+  instance_types = ["t3.medium"]
   min_size       = 0
   max_size       = 3
   desired_size   = 1

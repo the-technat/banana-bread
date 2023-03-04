@@ -1,0 +1,28 @@
+regions:
+  - sa-east-1
+  - eu-central-2
+  - global
+
+account-blocklist:
+  - "999999999999" # production
+
+accounts:
+  "298410952490":
+    filters:
+      IAMUser:
+        - "banana"
+        - "tfc"
+      IAMUserPolicyAttachment:
+        - "banana -> AdministratorAccess"
+        - "tfc -> AdministratorAccess"
+      IAMUserAccessKey:
+        - type: "glob"
+          value: "banana -> *"
+        - type: "glob"
+          value: "tfc -> *"
+      IAMVirtualMFADevice:
+        - type: "glob"
+          value: "arn:aws:iam::298410952490:mfa/*"
+      IAMLoginProfile:
+        - type: "glob"
+          value: "*banana*"

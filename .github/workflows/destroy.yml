@@ -1,0 +1,43 @@
+on: workflow_dispatch
+# schedule:
+#   # * is a special character in YAML so you have to quote this string
+#   - cron: "30 5,17 * * *"
+
+jobs:
+  destroy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Run Terraform Destroy
+        # https://developer.hashicorp.com/terraform/cloud-docs/api-docs/run#create-a-run
+        run: |
+          curl -X POST -H "Authorization: Bearer ${TFC_TOKEN}" -H "Content-type: application/json" https://app.terraform.io/api/v2/runs -d "
+            {
+              "data": {
+                "type":"runs",
+                "attributes": {
+                  "is-destroy":"true",
+                  "message":"scheduled destroy",
+                  "replace-addrs": "[]",
+                  "target-addrs": "[]",
+                  "allow-empty-apply": "true",
+                }
+              }
+              "relationships": {
+                "workspace": {
+                  "data": {
+                    "id":"ws-WGKQu5CWxWFU86We",
+                    "type":"workspaces"
+                  }
+                }
+              }
+            }"
+          steps:
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-central-2
+      - uses: coinmama/actions-awsnuke@v1
+        with:
+          aws_nuke_config: aws-nuke.yml

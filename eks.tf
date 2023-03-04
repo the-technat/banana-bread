@@ -37,6 +37,15 @@ module "eks" {
       iam_role_additional_policies = {
         AmazonSSMManagedInstanceCore = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
       }
+
+      taints = [
+        # will be removed by cilium once initialized
+        {
+          key    = "node.cilium.io/agent-not-ready"
+          value  = "true"
+          effect = "NO_EXECUTE"
+        }
+      ]
     }
   }
 

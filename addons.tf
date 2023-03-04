@@ -10,25 +10,24 @@ module "eks_blueprints_kubernetes_addons" {
   data_plane_wait_arn = join(",", [for group in module.eks.eks_managed_node_groups : group.node_group_arn])
 
   # Cilium
-  enable_cilium           = true
-  cilium_enable_wireguard = true
-  cilium_helm_config = {
-    values = [
-      "${file("config/cilium.yaml")}"
-    ]
-  }
+  enable_cilium = false # Why should we need chaining?
+  # cilium_enable_wireguard = true
+  # cilium_helm_config = {
+  #   values = [
+  #     "${file("${path.module}/config/cilium.yaml")}"
+  #   ]
+  # }
 
   # Argo CD
   enable_argocd = true
-  argocd_helm_config = {
-    # set_sensitive = [
-    #   {
-    #     name  = "configs.secret.argocdServerAdminPassword"
-    #     value = bcrypt_hash.argo.id
-    #   }
-    # ]
-  }
-  argocd_manage_add_ons = true # Indicates that ArgoCD is responsible for managing/deploying add-ons
+  # argocd_helm_config = {
+  # set_sensitive = [
+  #   {
+  #     name  = "configs.secret.argocdServerAdminPassword"
+  #     value = bcrypt_hash.argo.id
+  #   }
+  # ]
+  # }
   argocd_applications = {
     # addons = {
     #   path               = "chart"
@@ -59,10 +58,8 @@ module "eks_blueprints_kubernetes_addons" {
   # Cluster-autoscaler
   enable_cluster_autoscaler = true
 
-
   # Cert-Manager
   enable_cert_manager = true
-
 
   tags = local.tags
 }
