@@ -9,9 +9,7 @@ module "vpc" {
   public_subnets  = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k)]
   private_subnets = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 10)]
 
-  enable_ipv6                     = true
-  assign_ipv6_address_on_creation = true
-  create_egress_only_igw          = true
+  create_egress_only_igw = true
 
   public_subnet_ipv6_prefixes  = [0, 1, 2]
   private_subnet_ipv6_prefixes = [3, 4, 5]

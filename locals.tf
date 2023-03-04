@@ -13,6 +13,15 @@ locals {
   vpc_cidr = "10.0.0.0/16"
   azs      = slice(data.aws_availability_zones.available.names, 0, 3)
 
+  aws_auth_users = [
+    {
+      userarn  = "arn:aws:iam::298410952490:user/banana"
+      username = "banana"
+      groups   = ["system:masters"]
+    },
+  ]
+
+
   tags = {
     Cluster    = local.name
     GithubRepo = "github.com/alleaffengaffen/banana_bread"
