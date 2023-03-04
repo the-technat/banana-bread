@@ -9,7 +9,6 @@ module "eks" {
   cluster_addons = {
     coredns    = {}
     kube-proxy = {}
-    vpc-cni    = {}
   }
 
   vpc_id     = module.vpc.vpc_id
