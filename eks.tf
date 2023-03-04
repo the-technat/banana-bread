@@ -25,9 +25,25 @@ module "eks" {
   vpc_id     = module.vpc.vpc_id
   subnet_ids = module.vpc.private_subnets
 
+  manage_aws_auth_configmap = true
+  aws_auth_users = [
+    {
+      userarn  = "arn:aws:iam::298410952490:user/banana"
+      username = "banana"
+      groups   = ["system:masters"]
+    },
+  ]
+
   eks_managed_node_groups = {
-    initial = {
-      instance_types = local.instance_types
+    minions = {
+      name            = "minions"
+      use_name_prefix = true
+      capacity_type   = "SPOT"
+      instance_types  = local.instance_types
+
+      update_config = {
+        max_unavailable_percentage = 33
+      }
 
       ami_type = local.ami_type
       platform = local.platform
@@ -35,6 +51,10 @@ module "eks" {
       min_size     = local.min_size
       max_size     = local.max_size
       desired_size = local.desired_size
+
+      iam_role_additional_policies = {
+        AmazonSSMManagedInstanceCore = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
+      }
     }
   }
 
