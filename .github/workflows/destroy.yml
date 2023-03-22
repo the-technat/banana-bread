@@ -11,12 +11,18 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-      - name: Setup Terraform
-        uses: hashicorp/setup-terraform@v1
-        with:
-          # terraform_version: 0.13.0
-          cli_config_credentials_token: ${{ secrets.TFC_TOKEN }}
-      - name: Terraform Init
-        run: terraform init
-      - name: Terraform Destroy
-        run: terraform destroy -auto-approve -input=false
+      - name: Trigger destroy run
+        run: |
+          curl --request POST https://app.terraform.io/api/v2/runs \
+             --header "Authorization: Bearer ${{ secrets.TFC_TOKEN }}" \
+             --header 'Content-Type: application/vnd.api+json' \
+             -d @${{ github.workspace }}/.github/workflows/payload.json
+      # - name: Setup Terraform
+      #   uses: hashicorp/setup-terraform@v1
+      #   with:
+      #     # terraform_version: 0.13.0
+      #     cli_config_credentials_token: ${{ secrets.TFC_TOKEN }}
+      # - name: Terraform Init
+      #   run: terraform init
+      # - name: Terraform Destroy
+      #   run: terraform destroy -auto-approve -input=false

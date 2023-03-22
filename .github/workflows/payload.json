@@ -1,0 +1,20 @@
+{
+  "data": {
+    "type": "runs",
+    "attributes": {
+      "is-destroy": "true",
+      "message": "scheduled destroy",
+      "replace-addrs": "[]",
+      "target-addrs": "[]",
+      "allow-empty-apply": "true"
+    },
+    "relationships": {
+      "workspace": {
+        "data": {
+          "id": "ws-8CGgryJsbv6Eg7Ue",
+          "type": "workspaces"
+        }
+      }
+    }
+  }
+}

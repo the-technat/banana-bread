@@ -25,4 +25,5 @@ I'm not a fan of keeping homelabs running all the time. Mainly because of cost. 
 If you want to use this, go ahead, there's some configuration required.
 
 1. Configure a [schedule](./.github/workflows/destroy.yml), mine is ever day at 10:00 PM + on demand
-2. Creata a user-token in Terraform Cloud and add it to the Repository secrets as `TFC_TOKEN`
+2. Get your workspace ID and replace mine in [.github/workflows/payload.json](./.github/workflows/payload.json)
+3. Creata a user-token in Terraform Cloud and add it to the Repository secrets as `TFC_TOKEN`
