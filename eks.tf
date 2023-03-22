@@ -1,9 +1,17 @@
+locals {
+  tags = {
+    Cluster    = "banana_bread"
+    GithubRepo = "github.com/alleaffengaffen/banana_bread"
+  }
+  region = "eu-central-2"
+}
+
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "~> 19.9"
 
-  cluster_name    = local.name
-  cluster_version = local.cluster_version
+  cluster_name    = "banana_bread"
+  cluster_version = "1.24"
 
   cluster_addons = {
     coredns    = {}
@@ -18,7 +26,13 @@ module "eks" {
 
   # IAM
   manage_aws_auth_configmap = true
-  aws_auth_users            = local.aws_auth_users
+  aws_auth_users            = [
+    {
+      userarn  = "arn:aws:iam::298410952490:user/banana"
+      username = "banana"
+      groups   = ["system:masters"]
+    },
+  ]
 
   # Data-plane
   eks_managed_node_groups = {
@@ -27,17 +41,17 @@ module "eks" {
       use_name_prefix = true
 
       capacity_type  = "SPOT"
-      instance_types = local.instance_types
+      instance_types = ["t3a.medium", "t3.medium"]
 
       update_config = {
         max_unavailable_percentage = 33
       }
 
-      ami_type = local.ami_type
+      ami_type = "AL2_x86_64"
 
-      min_size     = local.min_size
-      max_size     = local.max_size
-      desired_size = local.desired_size
+      min_size     = 0
+      max_size     = 3
+      desired_size = 1
 
       iam_role_additional_policies = {
         AmazonSSMManagedInstanceCore = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"

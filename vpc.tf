@@ -1,8 +1,14 @@
+locals {
+  vpc_cidr = "10.123.0.0/16"
+  vpc_name = "banana_bread"
+  azs      = slice(data.aws_availability_zones.available.names, 0, 3)
+}
+
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "~> 3.0"
 
-  name = local.name
+  name = local.vpc_name
   cidr = local.vpc_cidr
 
   azs             = local.azs
@@ -18,11 +24,11 @@ module "vpc" {
 
   # Manage so we can name
   manage_default_network_acl    = true
-  default_network_acl_tags      = { Name = "${local.name}-default" }
+  default_network_acl_tags      = { Name = "${local.vpc_name}-default" }
   manage_default_route_table    = true
-  default_route_table_tags      = { Name = "${local.name}-default" }
+  default_route_table_tags      = { Name = "${local.vpc_name}-default" }
   manage_default_security_group = true
-  default_security_group_tags   = { Name = "${local.name}-default" }
+  default_security_group_tags   = { Name = "${local.vpc_name}-default" }
 
   public_subnet_tags = {
     "kubernetes.io/role/elb" = 1
