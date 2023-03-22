@@ -1,7 +1,28 @@
+## CNI Chaining values
+# https://docs.cilium.io/en/v1.11/gettingstarted/cni-chaining-aws-cni/
+enableIPv4Masquerade: false
+tunnel: disabled
+endpointRoutes:
+  enabled: true
+cni:
+  chainingMode: aws-cni
+  exclusive: false
+
+## General values
+cluster:
+  name: banana_bread
 rollOutCiliumPods: true
 priorityClassName: "system-node-critical"
 annotateK8sNode: true
 policyEnforcementMode: "default"
+ingressController:
+  enabled: true
+  enforceHttps: true
+containerRuntime:
+  integration: containerd
+  socketPath: /var/run/containerd/containerd.sock
+
+## Resources and security-contexts
 operator:
   replicas: 1
   rollOutPods: true
@@ -16,9 +37,6 @@ operator:
     requests:
       cpu: 100m
       memory: 128Mi
-containerRuntime:
-  integration: containerd
-  socketPath: /var/run/containerd/containerd.sock
 hubble:
   enabled: true
   rollOutPods: true
@@ -37,9 +55,9 @@ hubble:
     rollOutPods: true
     securityContext:
       enabled: true
-      runAsUser: 1001
-      runAsGroup: 1001
-      fsGroup: 1001
+      runAsUser: 10001
+      runAsGroup: 10001
+      fsGroup: 10001
     backend:
       resources:
         limits:
@@ -64,13 +82,7 @@ hubble:
         requests:
           cpu: 100m
           memory: 24Mi
-# kubeProxyReplacement: "strict"
-# k8sServiceHost: "api.alleaffengaffen.ch"
-# k8sServicePort: "6443"
 resources:
-  limits:
-    cpu: 2000m
-    memory: 2Gi
   requests:
     cpu: 300m
     memory: 300Mi
