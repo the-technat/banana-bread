@@ -11,7 +11,7 @@ module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "~> 19.9"
 
-  cluster_name    = "banana_bread"
+  cluster_name    = "banana-bread"
   cluster_version = local.cluster_version
 
   cluster_addons = {
