@@ -24,11 +24,5 @@ I'm not a fan of keeping homelabs running all the time. Mainly because of cost. 
 
 If you want to use this, go ahead, there's some configuration required.
 
-1. Get your AWS account ID and replace mine with it in `aws-nuke.yml`
-2. Get your workspace ID and replace mine in `.github/workflows/payload.json`
-3. Configure a schedule, mine is ever day at 10:00 PM + on demand
-4. Add some secrets to the Github Repo:
-
-- `AWS_ACCESS_KEY_ID`: Either use the same Access key as for Terraform or generate a new one
-- `AWS_SECRET_ACCESS_KEY`: Either use the same Access key as for Terraform or generate a new one
-- `TFC_TOKEN`: Create a user-token in Terraform Cloud
+1. Configure a [schedule](./.github/workflows/destroy.yml), mine is ever day at 10:00 PM + on demand
+2. Creata a user-token in Terraform Cloud and add it to the Repository secrets as `TFC_TOKEN`

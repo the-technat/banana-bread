@@ -10,7 +10,7 @@ module "eks_blueprints_kubernetes_addons" {
   data_plane_wait_arn = join(",", [for group in module.eks.eks_managed_node_groups : group.node_group_arn])
 
   # Cilium
-  enable_cilium = false # Why should we need chaining?
+  enable_cilium = true
   # cilium_enable_wireguard = true
   # cilium_helm_config = {
   #   values = [
@@ -39,17 +39,6 @@ module "eks_blueprints_kubernetes_addons" {
     #   repo_url           = "https://github.com/aws-samples/eks-blueprints-workloads.git"
     #   add_on_application = false
     # }
-  }
-
-  # Keda
-  enable_keda = true
-  keda_helm_config = {
-    values = [
-      {
-        name  = "serviceAccount.create"
-        value = "false"
-      }
-    ]
   }
 
   # CSI

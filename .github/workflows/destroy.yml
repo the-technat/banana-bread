@@ -11,22 +11,12 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v3
-      - name: Run Terraform Destroy
-        # https://developer.hashicorp.com/terraform/cloud-docs/api-docs/run#create-a-run
-        run: |
-          curl --request POST https://app.terraform.io/api/v2/runs \
-              --header "Authorization: Bearer ${{ secrets.TFC_TOKEN }}" \
-              --header 'Content-Type: application/vnd.api+json' \
-              -d @${{ github.workspace }}/.github/workflows/payload.json
-      - name: Wait for destroy
-        run: sleep 15m # we are lazy and don´t check when the run actually finished
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v1
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: eu-central-2
-      - uses: coinmama/actions-awsnuke@v1
-        with:
-          aws_nuke_version: "2.21.2"
-          aws_nuke_config: aws-nuke.yml
+          # terraform_version: 0.13.0
+          cli_config_credentials_token: ${{ secrets.TFC_TOKEN }}
+      - name: Terraform Init
+        run: terraform init
+      - name: Terraform Destroy
+        run: terraform destroy -auto-approve -input=false
