@@ -84,11 +84,11 @@ module "eks" {
       name       = "cows"
       subnet_ids = [module.vpc.private_subnets[2]]
     }
-    parrots = {
-      name       = "parrots"
-      subnet_ids = module.vpc.private_subnets
-      ami_id     = data.aws_ami.eks_default_arm.image_id
-    }
+    # parrots = {
+    #   name       = "parrots"
+    #   subnet_ids = module.vpc.private_subnets
+    #   ami_id     = data.aws_ami.eks_default_arm.image_id
+    # }
   }
 
   tags = local.tags

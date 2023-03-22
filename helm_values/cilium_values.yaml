@@ -2,6 +2,8 @@
 # https://docs.cilium.io/en/v1.11/gettingstarted/cni-chaining-aws-cni/
 enableIPv4Masquerade: false
 tunnel: disabled
+bpf:
+  hostLegacyRouting: true
 endpointRoutes:
   enabled: true
 cni:
