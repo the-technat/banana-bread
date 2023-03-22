@@ -4,6 +4,8 @@ locals {
   azs      = slice(data.aws_availability_zones.available.names, 0, 3)
 }
 
+data "aws_availability_zones" "available" {}
+
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
   version = "~> 3.0"
@@ -40,5 +42,3 @@ module "vpc" {
 
   tags = local.tags
 }
-
-data "aws_availability_zones" "available" {}

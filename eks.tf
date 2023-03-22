@@ -3,7 +3,7 @@ locals {
     Cluster    = "banana_bread"
     GithubRepo = "github.com/alleaffengaffen/banana_bread"
   }
-  region = "eu-central-2"
+  region          = "eu-central-2"
   cluster_version = "1.24"
 }
 
@@ -27,7 +27,7 @@ module "eks" {
 
   # IAM
   manage_aws_auth_configmap = true
-  aws_auth_users            = [
+  aws_auth_users = [
     {
       userarn  = "arn:aws:iam::298410952490:user/banana"
       username = "banana"
@@ -45,10 +45,20 @@ module "eks" {
     instance_types = ["t3.medium"]
     ami_id         = data.aws_ami.eks_default.image_id
     capacity_type  = "SPOT"
+    block_device_mappings = {
+      xvda = {
+        device_name = "/dev/xvda"
+        ebs = {
+          volume_size           = 20
+          volume_type           = "gp3"
+          delete_on_termination = true
+        }
+      }
+    }
 
     # scaling
-    min_size = 0
-    max_size = 3
+    min_size     = 0
+    max_size     = 3
     desired_size = 1
 
     # IAM
@@ -58,15 +68,15 @@ module "eks" {
 
     # K8s
     taints = [
-        # will be removed by cilium once initialized
-        {
-          key    = "node.cilium.io/agent-not-ready"
-          value  = "true"
-          effect = "NO_EXECUTE"
-        }
+      # will be removed by cilium once initialized
+      {
+        key    = "node.cilium.io/agent-not-ready"
+        value  = "true"
+        effect = "NO_EXECUTE"
+      }
     ]
     update_config = {
-        max_unavailable_percentage = 33
+      max_unavailable_percentage = 33
     }
     force_update_version = true
 
@@ -137,9 +147,9 @@ resource "helm_release" "cilium" {
   chart      = "cilium"
   version    = "1.12.5"
   namespace  = "kube-system"
-  wait = true
+  wait       = true
 
-  values = [ 
+  values = [
     templatefile("${path.module}/helm_values/cilium_values.yaml", {
     })
   ]
