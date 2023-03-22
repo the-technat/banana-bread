@@ -12,7 +12,7 @@ cni:
 
 ## General values
 cluster:
-  name: banana_bread
+  name: banana-bread
 rollOutCiliumPods: true
 priorityClassName: "system-node-critical"
 annotateK8sNode: true

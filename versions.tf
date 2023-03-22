@@ -24,7 +24,7 @@ terraform {
     organization = "alleaffengaffen"
 
     workspaces {
-      name = "banana_bread"
+      name = "banana-bread"
     }
   }
 }

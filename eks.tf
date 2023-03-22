@@ -1,7 +1,7 @@
 locals {
   tags = {
-    Cluster    = "banana_bread"
-    GithubRepo = "github.com/alleaffengaffen/banana_bread"
+    Cluster    = "banana-bread"
+    GithubRepo = "github.com/alleaffengaffen/banana-bread"
   }
   region          = "eu-central-2"
   cluster_version = "1.24"

@@ -1,4 +1,4 @@
-# banana_bread
+# banana-bread
 
 The last homelab I'll ever build
 
