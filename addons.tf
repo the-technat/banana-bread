@@ -30,14 +30,14 @@ resource "helm_release" "argocd" {
 #   # Wait on the `kube-system` profile before provisioning addons
 #   data_plane_wait_arn = join(",", [for group in module.eks.eks_managed_node_groups : group.node_group_arn])
 
-#   # CSI
 #   enable_amazon_eks_aws_ebs_csi_driver = true
-
-#   # Cluster-autoscaler
-#   enable_cluster_autoscaler = true
-
-#   # Cert-Manager
-#   enable_cert_manager = true
+#   enable_cluster_autoscaler            = true
+#   enable_aws_load_balancer_controller  = true
+#   enable_aws_node_termination_handler  = true
+#   enable_cert_manager                  = true
+#   enable_external_dns                  = true
+#   enable_kyverno                       = true
+#   enable_metrics_server                = true
 
 #   tags = local.tags
 # }
