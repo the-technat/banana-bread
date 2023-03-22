@@ -17,9 +17,6 @@ rollOutCiliumPods: true
 priorityClassName: "system-node-critical"
 annotateK8sNode: true
 policyEnforcementMode: "default"
-ingressController:
-  enabled: true
-  enforceHttps: true
 containerRuntime:
   integration: containerd
   socketPath: /var/run/containerd/containerd.sock
