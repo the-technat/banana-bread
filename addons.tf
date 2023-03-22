@@ -14,7 +14,7 @@ module "eks_blueprints_kubernetes_addons" {
   # cilium_enable_wireguard = true
   # cilium_helm_config = {
   #   values = [
-  #     "${file("${path.module}/config/cilium.yaml")}"
+  #     "${file("${path.module}/helm_configs/cilium.yaml")}"
   #   ]
   # }
 
