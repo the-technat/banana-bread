@@ -43,7 +43,6 @@ module "eks" {
     # compute
     ami_type       = "AL2_x86_64"
     instance_types = ["t3.medium"]
-    ami_id         = data.aws_ami.eks_default.image_id
     capacity_type  = "SPOT"
     block_device_mappings = {
       xvda = {
@@ -97,44 +96,16 @@ module "eks" {
     # parrots = {
     #   name       = "parrots"
     #   subnet_ids = module.vpc.private_subnets
-    #   ami_id     = data.aws_ami.eks_default_arm.image_id
+    #   ami_type   = "AL2_ARM_64"
+    # }
+    # rockets = {
+    #   name = "rockets"
+    #   ami_type = "BOTTLEROCKET_x86_64"
+    #   platform = "bottlerocket"
     # }
   }
 
   tags = local.tags
-}
-
-###############
-# AMIs
-###############
-data "aws_ami" "eks_default" {
-  most_recent = true
-  owners      = ["amazon"]
-
-  filter {
-    name   = "name"
-    values = ["amazon-eks-node-${local.cluster_version}-v*"]
-  }
-}
-
-data "aws_ami" "eks_default_arm" {
-  most_recent = true
-  owners      = ["amazon"]
-
-  filter {
-    name   = "name"
-    values = ["amazon-eks-arm64-node-${local.cluster_version}-v*"]
-  }
-}
-
-data "aws_ami" "eks_default_bottlerocket" {
-  most_recent = true
-  owners      = ["amazon"]
-
-  filter {
-    name   = "name"
-    values = ["bottlerocket-aws-k8s-${local.cluster_version}-x86_64-*"]
-  }
 }
 
 ###############
