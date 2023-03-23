@@ -17,9 +17,15 @@ module "eks" {
   cluster_version = local.cluster_version
 
   cluster_addons = {
-    coredns    = {}
-    kube-proxy = {}
-    vpc-cni    = {}
+    coredns = {
+      addon_version = "v1.9.3-eksbuild.2"
+    }
+    kube-proxy = {
+      addon_version = "v1.24.9-eksbuild.1"
+    }
+    vpc-cni = {
+      addon_version = "v1.12.2-eksbuild.1"
+    }
   }
 
   # Networking
@@ -43,6 +49,7 @@ module "eks" {
   eks_managed_node_group_defaults = {
     # general
     use_name_prefix = true
+    ami_id          = "ami-029bc1687a2afeb19"
 
     # compute
     ami_type       = "AL2_x86_64"
@@ -73,6 +80,8 @@ module "eks" {
     }
 
     # K8s
+    enable_bootstrap_user_data = true
+    bootstrap_extra_args       = "--kubelet-extra-args '--node-labels=cluster=${local.cluster_name}' --container-runtime containerd"
     taints = [
       # will be removed by cilium once initialized
       {
