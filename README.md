@@ -4,6 +4,14 @@ The last homelab I'll ever build
 
 Based on <https://aws-ia.github.io/terraform-aws-eks-blueprints/v4.25.0/>
 
+## Addons
+
+The following addons are setup:
+
+- [cilium](https://cilium.io): chained together with the aws-vpc-cni to provide Netpol functions
+- [argocd](https://argoproj.github.io/cd): Ready to deploy GitOps based apps
+- [aws-load-balancer-controller](https://kubernetes-sigs.github.io/aws-load-balancer-controller/v2.4/): Controller for provisioning Load Balancers in AWS
+
 ## Deployment
 
 Since we have 100% Terraform, the easiest way to get this deployed is by creating a workspace in Terraform Cloud, adding a pair of AWS credentials and selecting the VCS-driven workflow pointing to this repository.
