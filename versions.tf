@@ -18,6 +18,14 @@ terraform {
       source  = "hashicorp/helm"
       version = ">= 2.4.1"
     }
+    argocd = {
+      source  = "oboukili/argocd"
+      version = ">= 5.0.0"
+    }
+    bcrypt = {
+      source  = "viktorradnai/bcrypt"
+      version = ">= 0.1.2"
+    }
   }
 
   backend "remote" {

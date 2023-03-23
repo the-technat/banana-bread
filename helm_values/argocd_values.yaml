@@ -21,7 +21,7 @@ server:
   ingress:
     enabled: true
     annotations: {}
-    ingressClassName: "cilium"
+    ingressClassName: "alb"
     hosts:
       - cd.cucumber.alleaffengaffen.ch
   priorityClassName: "infra"
@@ -144,52 +144,3 @@ server:
       requests:
         cpu: 50m
         memory: 64Mi
-
-extraObjects:
-- apiVersion: argoproj.io/v1alpha1
-  kind: AppProject
-  metadata:
-    name: apps
-    namespace: argocd
-  spec:
-    clusterResourceWhitelist:
-      - group: "*"
-        kind: "*"
-    description: Applications
-    destinations:
-      - name: in-cluster
-        namespace: "*"
-        server: https://kubernetes.default.svc
-    namespaceResourceWhitelist:
-      - group: "*"
-        kind: "*"
-    sourceRepos:
-      - https://github.com/alleaffengaffen/banana-bread.git
-- apiVersion: argoproj.io/v1alpha1
-  kind: Application
-  metadata:
-    name: app-of-apps
-    namespace: argocd
-  spec:
-    project: apps
-    source:
-      repoURL: https://github.com/alleaffengaffen/banana-bread.git
-      targetRevision: HEAD
-      path: apps/configs
-    destination:
-      server: https://kubernetes.default.svc
-      namespace: argocd
-    syncPolicy:
-      automated:
-        prune: true
-        selfHeal: true
-        allowEmpty: false
-      syncOptions:
-        - CreateNamespace=true
-        - ServerSideApply=true
-      retry:
-        limit: 5
-        backoff:
-          duration: 5s
-          factor: 2
-          maxDuration: 5m
