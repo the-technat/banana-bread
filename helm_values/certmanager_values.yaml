@@ -1,6 +1,8 @@
 global:
   priorityClassName: "infra"
 
+installCRDs: true
+
 resources:
   requests:
     cpu: 10m
