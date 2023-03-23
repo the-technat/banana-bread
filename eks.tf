@@ -5,13 +5,15 @@ locals {
   }
   region          = "eu-central-2"
   cluster_version = "1.24"
+  cluster_name    = "banana-bread"
+  account_id      = "298410952490"
 }
 
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "~> 19.9"
 
-  cluster_name    = "banana-bread"
+  cluster_name    = local.cluster_name
   cluster_version = local.cluster_version
 
   cluster_addons = {

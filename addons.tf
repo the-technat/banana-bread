@@ -1,3 +1,16 @@
+resource "kubernetes_priority_class_v1" "infra" {
+  metadata {
+    name = "infra"
+  }
+
+  value = 1000000000
+
+  depends_on = [
+    module.eks
+  ]
+}
+
+
 ##########
 # Argo CD
 ##########
@@ -15,46 +28,52 @@ resource "helm_release" "argocd" {
 
   depends_on = [
     module.eks,
+    helm_release.cilium,
+    kubernetes_priority_class_v1.infra
+  ]
+}
+
+
+##########
+# AWS Load Balancer Controller
+##########
+resource "helm_release" "aws_load_balancer_controller" {
+  name             = "aws-load-balancer-controller"
+  repository       = "https://aws.github.io/eks-charts"
+  chart            = "aws-load-balancer-controller"
+  version          = "1.x.x"
+  namespace        = "aws"
+  create_namespace = true
+
+  values = [
+    templatefile("${path.module}/helm_values/awslbcon_values.yaml", {
+      region       = local.region
+      cluster_name = local.cluster_name
+      role_arn     = module.lb_controller_irsa.iam_role_arn
+    })
+  ]
+
+  depends_on = [
+    module.eks,
     helm_release.cilium
   ]
 }
 
-##########
-# Infrastructure addons
-##########
-resource "kubernetes_priority_class_v1" "infra" {
-  metadata {
-    name = "infra"
+
+module "lb_controller_irsa" {
+  source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
+  version = "~> 5.0"
+
+  role_name_prefix = "aws-lb-controller"
+
+  attach_load_balancer_controller_policy = true
+
+  oidc_providers = {
+    main = {
+      provider_arn               = module.eks.oidc_provider_arn
+      namespace_service_accounts = ["aws:aws-load-balancer-controller"]
+    }
   }
-
-  value = 1000000000
-
-  depends_on = [
-    module.eks
-  ]
-}
-
-module "eks_blueprints_kubernetes_addons" {
-  source = "github.com/aws-ia/terraform-aws-eks-blueprints/modules/kubernetes-addons"
-
-  eks_cluster_id       = module.eks.cluster_name
-  eks_cluster_endpoint = module.eks.cluster_endpoint
-  eks_oidc_provider    = module.eks.oidc_provider
-  eks_cluster_version  = module.eks.cluster_version
-
-  enable_cluster_autoscaler           = true
-  enable_aws_load_balancer_controller = true
-  # enable_amazon_eks_aws_ebs_csi_driver = true
-  # enable_aws_node_termination_handler  = true
-  # enable_cert_manager                  = true
-  # enable_external_dns                  = true
-  # enable_kyverno                       = true
-  enable_metrics_server = true
 
   tags = local.tags
 }
-
-##########
-# Contour
-##########
-

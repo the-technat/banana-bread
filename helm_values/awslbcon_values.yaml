@@ -1,0 +1,29 @@
+replicaCount: 1
+
+serviceAccount:
+  annotations:
+    eks.amazonaws.com/role-arn: ${role_arn}
+
+securityContext:
+  capabilities:
+    drop:
+      - ALL
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  allowPrivilegeEscalation: false
+
+resources:
+  limits:
+    cpu: 100m
+    memory: 256Mi
+  requests:
+    cpu: 100m
+    memory: 128Mi
+
+priorityClassName: infra
+clusterName: ${cluster_name}
+ingressClass: alb
+
+region: ${region}
+
+enablePodReadinessGateInject: true

@@ -24,7 +24,7 @@ server:
     ingressClassName: "cilium"
     hosts:
       - cd.cucumber.alleaffengaffen.ch
-  priorityClassName: "system-cluster-critical"
+  priorityClassName: "infra"
   containerSecurityContext:
     allowPrivilegeEscalation: false
     capabilities:
@@ -43,7 +43,7 @@ server:
 
   controller:
     enableStatefulSet: true
-    priorityClassName: "system-cluster-critical"
+    priorityClassName: "infra"
     containerSecurityContext:
       allowPrivilegeEscalation: false
       capabilities:
@@ -61,7 +61,7 @@ server:
         memory: 128Mi
 
   notifications:
-    priorityClassName: "system-cluster-critical"
+    priorityClassName: "infra"
     containerSecurityContext:
       runAsNonRoot: true
       readOnlyRootFilesystem: true
@@ -82,7 +82,7 @@ server:
         memory: 64Mi
 
   redis:
-    priorityClassName: "system-cluster-critical"
+    priorityClassName: "infra"
     containerSecurityContext:
       allowPrivilegeEscalation: false
       capabilities:
@@ -107,7 +107,7 @@ server:
         memory: 64Mi
 
   repoServer:
-    priorityClassName: "system-cluster-critical"
+    priorityClassName: "infra"
     containerSecurityContext:
       allowPrivilegeEscalation: false
       capabilities:
@@ -125,7 +125,7 @@ server:
         memory: 64Mi
 
   applicationSet:
-    priorityClassName: "system-cluster-critical"
+    priorityClassName: "infra"
     containerSecurityContext:
       runAsNonRoot: true
       readOnlyRootFilesystem: true
