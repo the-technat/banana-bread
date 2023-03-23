@@ -4,11 +4,11 @@ enableIPv4Masquerade: false
 tunnel: disabled
 bpf:
   hostLegacyRouting: true
-endpointRoutes:
-  enabled: true
+# endpointRoutes:
+#   enabled: true
 cni:
   chainingMode: aws-cni
-  exclusive: false
+  # exclusive: false
 
 ## General values
 cluster:

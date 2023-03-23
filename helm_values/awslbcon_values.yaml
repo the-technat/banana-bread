@@ -26,4 +26,4 @@ ingressClass: alb
 
 region: ${region}
 
-enablePodReadinessGateInject: true
+defaultSSLPolicy: "ELBSecurityPolicy-FS-1-2-Res-2020-10"
