@@ -1,3 +1,6 @@
+##########
+# General
+##########
 resource "kubernetes_priority_class_v1" "infra" {
   metadata {
     name = "infra"
@@ -9,7 +12,6 @@ resource "kubernetes_priority_class_v1" "infra" {
     module.eks
   ]
 }
-
 
 ##########
 # Argo CD
@@ -32,7 +34,6 @@ resource "helm_release" "argocd" {
     kubernetes_priority_class_v1.infra
   ]
 }
-
 
 ##########
 # AWS Load Balancer Controller
