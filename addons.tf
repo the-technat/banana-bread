@@ -19,25 +19,42 @@ resource "helm_release" "argocd" {
   ]
 }
 
-# module "eks_blueprints_kubernetes_addons" {
-#   source = "github.com/aws-ia/terraform-aws-eks-blueprints/modules/kubernetes-addons"
+##########
+# Infrastructure addons
+##########
+resource "kubernetes_priority_class_v1" "infra" {
+  metadata {
+    name = "infra"
+  }
 
-#   eks_cluster_id       = module.eks.cluster_name
-#   eks_cluster_endpoint = module.eks.cluster_endpoint
-#   eks_oidc_provider    = module.eks.oidc_provider
-#   eks_cluster_version  = module.eks.cluster_version
+  value = 1000000000
 
-#   # Wait on the `kube-system` profile before provisioning addons
-#   data_plane_wait_arn = join(",", [for group in module.eks.eks_managed_node_groups : group.node_group_arn])
+  depends_on = [
+    module.eks
+  ]
+}
 
-#   enable_amazon_eks_aws_ebs_csi_driver = true
-#   enable_cluster_autoscaler            = true
-#   enable_aws_load_balancer_controller  = true
-#   enable_aws_node_termination_handler  = true
-#   enable_cert_manager                  = true
-#   enable_external_dns                  = true
-#   enable_kyverno                       = true
-#   enable_metrics_server                = true
+module "eks_blueprints_kubernetes_addons" {
+  source = "github.com/aws-ia/terraform-aws-eks-blueprints/modules/kubernetes-addons"
 
-#   tags = local.tags
-# }
+  eks_cluster_id       = module.eks.cluster_name
+  eks_cluster_endpoint = module.eks.cluster_endpoint
+  eks_oidc_provider    = module.eks.oidc_provider
+  eks_cluster_version  = module.eks.cluster_version
+
+  enable_cluster_autoscaler           = true
+  enable_aws_load_balancer_controller = true
+  # enable_amazon_eks_aws_ebs_csi_driver = true
+  # enable_aws_node_termination_handler  = true
+  # enable_cert_manager                  = true
+  # enable_external_dns                  = true
+  # enable_kyverno                       = true
+  enable_metrics_server = true
+
+  tags = local.tags
+}
+
+##########
+# Contour
+##########
+
