@@ -3,7 +3,7 @@ kind: Deployment
 metadata:
   name: podinfo
 spec:
-  replicas: 3
+  replicas: 20
   selector:
     matchLabels:
       app.kubernetes.io/name: podinfo
@@ -13,70 +13,70 @@ spec:
         app.kubernetes.io/name: podinfo
     spec:
       containers:
-      - name: podinfod
-        image: ghcr.io/stefanprodan/podinfo:6.3.5
-        imagePullPolicy: IfNotPresent
-        ports:
-        - name: http
-          containerPort: 9898
-          protocol: TCP
-        - name: https
-          containerPort: 9899
-          protocol: TCP
-        command:
-        - ./podinfo
-        - --port=9898
-        - --secure-port=9899
-        - --level=info
-        - --random-delay=false
-        - --random-error=false
-        env:
-        - name: PODINFO_UI_COLOR
-          value: "#34577c"
-        volumeMounts:
-        - name: tls
-          mountPath: /data/cert
-        securityContext:
-          runAsUser: 1001
-        livenessProbe:
-          exec:
-            command:
-            - podcli
-            - check
-            - http
-            - localhost:9898/healthz
-          initialDelaySeconds: 5
-          timeoutSeconds: 5
-        readinessProbe:
-          exec:
-            command:
-            - podcli
-            - check
-            - http
-            - localhost:9898/readyz
-          initialDelaySeconds: 5
-          timeoutSeconds: 5
-        resources:
-          limits:
-            cpu: 2000m
-            memory: 512Mi
-          requests:
-            cpu: 100m
-            memory: 64Mi
+        - name: podinfod
+          image: ghcr.io/stefanprodan/podinfo:6.3.5
+          imagePullPolicy: IfNotPresent
+          ports:
+            - name: http
+              containerPort: 9898
+              protocol: TCP
+            - name: https
+              containerPort: 9899
+              protocol: TCP
+          command:
+            - ./podinfo
+            - --port=9898
+            - --secure-port=9899
+            - --level=info
+            - --random-delay=false
+            - --random-error=false
+          env:
+            - name: PODINFO_UI_COLOR
+              value: "#34577c"
+          volumeMounts:
+            - name: tls
+              mountPath: /data/cert
+          securityContext:
+            runAsUser: 1001
+          livenessProbe:
+            exec:
+              command:
+                - podcli
+                - check
+                - http
+                - localhost:9898/healthz
+            initialDelaySeconds: 5
+            timeoutSeconds: 5
+          readinessProbe:
+            exec:
+              command:
+                - podcli
+                - check
+                - http
+                - localhost:9898/readyz
+            initialDelaySeconds: 5
+            timeoutSeconds: 5
+          resources:
+            limits:
+              cpu: 2000m
+              memory: 512Mi
+            requests:
+              cpu: 100m
+              memory: 64Mi
       volumes:
-      - name: tls
-        secret:
-          secretName: podinfo-tls
+        - name: tls
+          secret:
+            secretName: podinfo-tls
       topologySpreadConstraints:
-      - labelSelector:
-          matchLabels:
-            app.kubernetes.io/name: podinfo
-        maxSkew: 1
-        topologyKey: topology.kubernetes.io/zone
-        whenUnsatisfiable: DoNotSchedule
-      - labelSelector:
-          matchLabels:
-            app.kubernetes.io/name: podinfo
-        maxSkew: 1
-        topologyKey: kubernetes.io/hostname
-        whenUnsatisfiable: DoNotSchedule
+        - labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: podinfo
+          maxSkew: 1
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: DoNotSchedule
+        - labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: podinfo
+          maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: DoNotSchedule
