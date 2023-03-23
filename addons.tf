@@ -78,3 +78,26 @@ module "lb_controller_irsa" {
 
   tags = local.tags
 }
+
+
+##########
+# Cert Manager
+##########
+resource "helm_release" "cert_manager" {
+  name             = "cert-manager"
+  repository       = "https://charts.jetstack.io"
+  chart            = "cert-manager"
+  version          = "1.11.x"
+  namespace        = "cert-manager"
+  create_namespace = true
+
+  values = [
+    templatefile("${path.module}/helm_values/certmanager_values.yaml", {
+    })
+  ]
+
+  depends_on = [
+    module.eks,
+    helm_release.cilium
+  ]
+}

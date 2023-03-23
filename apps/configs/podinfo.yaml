@@ -10,9 +10,12 @@ spec:
   project: default
   source:
     path: apps/podinfo
-    repoURL: https://github.com/alleaffengaffen/banana-bread:
+    repoURL: https://github.com/alleaffengaffen/banana-bread.git
     targetRevision: HEAD
-	syncPolicy:
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
     syncOptions:
     - ServerSideApply=true
     - CreateNamespace=true
