@@ -25,6 +25,8 @@ module "eks" {
   # Networking
   vpc_id                         = module.vpc.vpc_id
   subnet_ids                     = module.vpc.private_subnets
+  create_cluster_security_group  = false # don't create an extra SG for the cluster
+  create_node_security_group     = false # don't create an extra SG for the nodes
   cluster_endpoint_public_access = true
 
   # IAM
@@ -56,6 +58,9 @@ module "eks" {
         }
       }
     }
+
+    # networking
+    vpc_security_group_ids = module.eks.cluster_primary_security_group_id # get the nodes the SG from the cluster
 
     # scaling
     min_size     = 0
