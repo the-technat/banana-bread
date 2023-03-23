@@ -60,7 +60,7 @@ module "eks" {
     }
 
     # networking
-    vpc_security_group_ids = module.eks.cluster_primary_security_group_id # get the nodes the SG from the cluster
+    vpc_security_group_ids = [module.eks.cluster_primary_security_group_id] # get the nodes the SG from the cluster
 
     # scaling
     min_size     = 0

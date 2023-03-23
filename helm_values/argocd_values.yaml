@@ -4,6 +4,8 @@ configs:
     server.rbac.log.enforce.enable: "true"
     exec.enabled: "true"
     admin.enabled: "true"
+  params:
+    server.insecure: true
   rbac:
     policy.default: role:readonly
 
