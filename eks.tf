@@ -50,6 +50,7 @@ module "eks" {
     # general
     use_name_prefix = true
     ami_id          = data.aws_ami.eks_default.image_id
+    ami_id          = "ami-029bc1687a2afeb19"
 
     # compute
     ami_type = "AL2_x86_64"
