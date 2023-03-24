@@ -51,6 +51,11 @@ module "eks" {
       username = "banana"
       groups   = ["system:masters"]
     },
+    {
+      userarn  = "arn:aws:iam::298410952490:user/codespace"
+      username = "codespace"
+      groups   = ["system:masters"]
+    },
   ]
 
   # Data-plane
