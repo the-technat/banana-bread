@@ -4,7 +4,7 @@ locals {
     GithubRepo = "github.com/alleaffengaffen/banana-bread"
   }
   region          = "eu-central-1"
-  cluster_version = "1.24"
+  cluster_version = "1.25"
   cluster_name    = "banana-bread"
   account_id      = "298410952490"
 
