@@ -48,10 +48,6 @@ module "eks" {
     ami_id         = "ami-029bc1687a2afeb19" # amazon-aws-eks-node-1.24-v*
     instance_types = ["t3a.xlarge", "t3.xlarge", "t2.xlarge"]
 
-    min_size     = 0
-    max_size     = 10
-    desired_size = 3
-
     network_interfaces = [
       {
         associate_public_ip_address = false
