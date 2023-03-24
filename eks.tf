@@ -3,7 +3,7 @@ locals {
     Cluster    = "banana-bread"
     GithubRepo = "github.com/alleaffengaffen/banana-bread"
   }
-  region          = "eu-central-2"
+  region          = "eu-central-1"
   cluster_version = "1.24"
   cluster_name    = "banana-bread"
   account_id      = "298410952490"
@@ -52,8 +52,9 @@ module "eks" {
     ami_id          = data.aws_ami.eks_default.image_id
 
     # compute
-    ami_type       = "AL2_x86_64"
-    instance_types = ["t3.medium"]
+    ami_type = "AL2_x86_64"
+    # instance_types = ["t3.medium"]
+    instance_types = ["t3a.xlarge", "t3.xlarge", "t2.xlarge"]
     capacity_type  = "SPOT"
     block_device_mappings = {
       xvda = {
@@ -67,7 +68,7 @@ module "eks" {
     }
 
     # networking
-    vpc_security_group_ids = [module.eks.cluster_primary_security_group_id] # get the nodes the SG from the cluster
+    vpc_security_group_ids = [module.eks.cluster_primary_security_group_id] # reuse the EKS created SG
 
     # scaling
     min_size     = 0
