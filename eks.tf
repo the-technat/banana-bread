@@ -11,26 +11,34 @@ locals {
 
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
-  version = "~> 19.9"
+  version = "18.26.6"
 
   cluster_name    = local.cluster_name
   cluster_version = local.cluster_version
 
   cluster_addons = {
     coredns = {
-      addon_version = "v1.9.3-eksbuild.2"
+      addon_version     = "v1.9.3-eksbuild.2"
+      resolve_conflicts = "OVERWRITE"
+
     }
     kube-proxy = {
-      addon_version = "v1.24.9-eksbuild.1"
+      addon_version     = "v1.24.9-eksbuild.1"
+      resolve_conflicts = "OVERWRITE"
     }
     vpc-cni = {
-      addon_version = "v1.12.2-eksbuild.1"
+      addon_version     = "v1.12.2-eksbuild.1"
+      resolve_conflicts = "OVERWRITE"
     }
   }
+
+  # Loggging
+  cluster_enabled_log_types = ["api", "audit", "authenticator", "controllerManager", "scheduler"]
 
   # Networking
   vpc_id                         = module.vpc.vpc_id
   subnet_ids                     = module.vpc.private_subnets
+  cluster_security_group_id      = aws_security_group.eks_cluster.id
   create_cluster_security_group  = false # don't create an extra SG for the cluster
   create_node_security_group     = false # don't create an extra SG for the nodes
   cluster_endpoint_public_access = true
@@ -49,12 +57,20 @@ module "eks" {
   eks_managed_node_group_defaults = {
     # general
     use_name_prefix = true
-    ami_id          = data.aws_ami.eks_default.image_id
     ami_id          = "ami-029bc1687a2afeb19"
+    metadata_options = {
+      http_endpoint               = "enabled"
+      http_tokens                 = "required"
+      http_put_response_hop_limit = 2
+      instance_metadata_tags      = "disabled"
+    }
 
-    # compute
-    ami_type = "AL2_x86_64"
-    # instance_types = ["t3.medium"]
+    # IAM
+    iam_role_attach_cni_policy = true
+
+
+    # Compute
+    ami_type       = "AL2_x86_64"
     instance_types = ["t3a.xlarge", "t3.xlarge", "t2.xlarge"]
     capacity_type  = "SPOT"
     block_device_mappings = {
@@ -67,9 +83,18 @@ module "eks" {
         }
       }
     }
+    ebs_optimized     = true
+    enable_monitoring = true
+
 
     # networking
-    vpc_security_group_ids = [module.eks.cluster_primary_security_group_id] # reuse the EKS created SG
+    network_interfaces = [
+      {
+        associate_public_ip_address = false
+        delete_on_termination       = true
+        security_groups             = [module.eks.cluster_primary_security_group_id, aws_security_group.eks_cluster.id]
+      }
+    ]
 
     # scaling
     min_size     = 0
@@ -77,9 +102,10 @@ module "eks" {
     desired_size = 1
 
     # IAM
-    iam_role_additional_policies = {
-      AmazonSSMManagedInstanceCore = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore"
-    }
+    iam_role_additional_policies = [
+      "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore",
+      "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryReadOnly"
+    ]
 
     # K8s
     enable_bootstrap_user_data = true
