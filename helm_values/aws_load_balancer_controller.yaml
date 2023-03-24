@@ -1,4 +1,7 @@
 replicaCount: 1
+clusterName: ${cluster_name}
+ingressClass: alb
+region: ${region}
 
 serviceAccount:
   annotations:
@@ -19,11 +22,3 @@ resources:
   requests:
     cpu: 100m
     memory: 128Mi
-
-priorityClassName: infra
-clusterName: ${cluster_name}
-ingressClass: alb
-
-region: ${region}
-
-defaultSSLPolicy: "ELBSecurityPolicy-FS-1-2-Res-2020-10"

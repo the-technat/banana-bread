@@ -1,0 +1,5 @@
+resources:
+  - ns.yaml
+  - deploy.yaml
+  - service.yaml
+  - secret.yaml

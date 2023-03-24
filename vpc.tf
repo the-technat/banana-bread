@@ -1,10 +1,3 @@
-locals {
-  vpc_cidr = "10.123.0.0/16"
-  vpc_name = "banana-bread"
-  azs      = slice(data.aws_availability_zones.available.names, 0, 3)
-}
-
-data "aws_availability_zones" "available" {}
 
 module "vpc" {
   source  = "terraform-aws-modules/vpc/aws"
@@ -41,24 +34,4 @@ module "vpc" {
   }
 
   tags = local.tags
-}
-
-resource "aws_security_group" "eks_cluster" {
-  name_prefix = "eks-cluster"
-  description = "Custom Cluster Security Group"
-  vpc_id      = module.vpc.vpc_id
-
-  ingress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["10.0.0.0/8", "172.16.0.0/12"]
-  }
-
-  egress {
-    from_port   = 0
-    to_port     = 0
-    protocol    = "-1"
-    cidr_blocks = ["10.0.0.0/8", "172.16.0.0/12"]
-  }
 }

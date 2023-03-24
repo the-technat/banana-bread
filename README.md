@@ -2,14 +2,18 @@
 
 The last homelab I'll ever build
 
-Based on <https://aws-ia.github.io/terraform-aws-eks-blueprints/v4.25.0/>
+## Cluster
+
+Some specialities on this setup:
+
+- Custom cluster security group is created
+- Cilium in CNI-chaining mode is used
 
 ## Addons
 
 The following addons are setup:
 
 - [cilium](https://cilium.io): chained together with the aws-vpc-cni to provide Netpol functions
-- [argocd](https://argoproj.github.io/cd): Ready to deploy GitOps based apps
 - [aws-load-balancer-controller](https://kubernetes-sigs.github.io/aws-load-balancer-controller/v2.4/): Controller for provisioning Load Balancers in AWS
 
 ## Deployment
