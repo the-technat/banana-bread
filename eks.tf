@@ -49,7 +49,7 @@ module "eks" {
   eks_managed_node_group_defaults = {
     # general
     use_name_prefix = true
-    ami_id          = "ami-029bc1687a2afeb19"
+    ami_id          = data.aws_ami.eks_default.image_id
 
     # compute
     ami_type       = "AL2_x86_64"
@@ -113,6 +113,7 @@ module "eks" {
     #   name       = "parrots"
     #   subnet_ids = module.vpc.private_subnets
     #   ami_type   = "AL2_ARM_64"
+    #   ami_id     =  data.aws_ami.eks_default_arm.image_id
     # }
     # rockets = {
     #   name = "rockets"
@@ -122,6 +123,26 @@ module "eks" {
   }
 
   tags = local.tags
+}
+
+data "aws_ami" "eks_default" {
+  most_recent = true
+  owners      = ["amazon"]
+
+  filter {
+    name   = "name"
+    values = ["amazon-eks-node-${local.cluster_version}-v*"]
+  }
+}
+
+data "aws_ami" "eks_default_arm" {
+  most_recent = true
+  owners      = ["amazon"]
+
+  filter {
+    name   = "name"
+    values = ["amazon-eks-arm64-node-${local.cluster_version}-v*"]
+  }
 }
 
 ###############
