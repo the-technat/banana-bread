@@ -1,63 +1,91 @@
-###############
-# Cilium
-##############
-resource "helm_release" "cilium" {
-  name       = "cilium"
-  repository = "https://helm.cilium.io"
-  chart      = "cilium"
-  version    = "1.12.5"
-  namespace  = "kube-system"
-  wait       = true
+##########
+# General
+##########
+resource "kubernetes_priority_class_v1" "infra" {
+  metadata {
+    name = "infra"
+  }
 
-  values = [
-    templatefile("${path.module}/helm_values/cilium.yaml", {
-    })
-  ]
+  value = 1000000000
 
   depends_on = [
-    module.eks.aws_eks_cluster
+    module.eks
   ]
 }
 
-##########
-# AWS Load Balancer Controller
-##########
-resource "helm_release" "aws_load_balancer_controller" {
-  name             = "aws-load-balancer-controller"
-  repository       = "https://aws.github.io/eks-charts"
-  chart            = "aws-load-balancer-controller"
-  version          = "1.4.6"
-  namespace        = "aws"
-  create_namespace = true
-
-  values = [
-    templatefile("${path.module}/helm_values/aws_load_balancer_controller.yaml", {
-      region       = local.region
-      cluster_name = local.cluster_name
-      role_arn     = module.aws_load_balancer_controller_irsa.iam_role_arn
-    })
-  ]
+resource "argocd_project" "apps" {
+  metadata {
+    name      = "apps"
+    namespace = "argocd"
+  }
+  spec {
+    source_repos = ["*"]
+    destination {
+      server    = "https://kubernetes.default.svc"
+      namespace = "*"
+    }
+    cluster_resource_whitelist {
+      group = "*"
+      kind  = "*"
+    }
+    namespace_resource_whitelist {
+      group = "*"
+      kind  = "*"
+    }
+  }
 
   depends_on = [
     module.eks,
     helm_release.cilium,
-    module.aws_load_balancer_controller_irsa
+    helm_release.argocd
   ]
 }
 
-module "aws_load_balancer_controller_irsa" {
-  source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
-  version = "~> 5.0"
+resource "argocd_application" "app_of_apps" {
+  metadata {
+    name      = "app-of-apps"
+    namespace = "argocd"
+  }
 
-  role_name_prefix                       = "aws-load-balancer-controller"
-  attach_load_balancer_controller_policy = true
+  wait = true
 
-  oidc_providers = {
-    main = {
-      provider_arn               = module.eks.oidc_provider_arn
-      namespace_service_accounts = ["aws:aws-load-balancer-controller"]
+  spec {
+    project = "apps"
+
+    source {
+      repo_url        = "https://github.com/alleaffengaffen/banana-bread.git"
+      path            = "apps/configs"
+      target_revision = "HEAD"
+    }
+
+    destination {
+      server    = "https://kubernetes.default.svc"
+      namespace = "argocd"
+    }
+
+    sync_policy {
+      automated {
+        prune       = true
+        self_heal   = true
+        allow_empty = true
+      }
+      sync_options = ["CreateNamespace=true", "ServerSideApply=true"]
+      retry {
+        limit = "5"
+        backoff {
+          duration     = "5s"
+          max_duration = "2m"
+          factor       = "2"
+        }
+      }
     }
   }
 
-  tags = local.tags
+  depends_on = [
+    module.eks,
+    helm_release.cilium,
+    helm_release.argocd,
+    module.eks.aws_eks_cluster
+  ]
 }
+

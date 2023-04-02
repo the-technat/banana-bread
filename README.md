@@ -6,15 +6,28 @@ The last homelab I'll ever build
 
 Some specialities on this setup:
 
-- Custom cluster security group is created
-- Cilium in CNI-chaining mode is used
+- Only the EKS managed SG is used
+- Cilium in overlay mode with kube-proxy replacemement is used
+- On cluster-level is designed fully-HA except the NAT gateway (only one for all AZs)
 
 ## Addons
 
 The following addons are setup:
 
-- [cilium](https://cilium.io): chained together with the aws-vpc-cni to provide Netpol functions
+- [cilium](https://cilium.io): full overlay networking mode
 - [aws-load-balancer-controller](https://kubernetes-sigs.github.io/aws-load-balancer-controller/v2.4/): Controller for provisioning Load Balancers in AWS
+- [argocd](https://argoproj.github.io/cd): Ready to deploy GitOps based apps
+- [cert-manager](https://cert-manager.io/): manage certificates in a k8s native way
+
+## To Do
+
+Always let some room for improvements:
+
+- [ ] Deploy cluster-autoscaler
+- [ ] Deploy aws-ebs-csi-driver
+- [ ] Deploy aws-efs-csi-driver
+- [ ] Deploy keda autoscaler
+- [ ] Deploy metrics-server
 
 ## Deployment
 

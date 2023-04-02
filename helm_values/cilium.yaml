@@ -1,14 +1,10 @@
-## CNI Chaining values
-# https://docs.cilium.io/en/v1.11/gettingstarted/cni-chaining-aws-cni/
-enableIPv4Masquerade: false
-tunnel: disabled
-bpf:
-  hostLegacyRouting: true
-# endpointRoutes:
-#   enabled: true
-cni:
-  chainingMode: aws-cni
-  # exclusive: false
+## Overlay values
+# https://docs.cilium.io/en/v1.13/installation/k8s-install-helm/#install-cilium -> eks
+egressMasqueradeInterfaces: eth0
+kubeProxyReplacement: "strict"
+k8sServiceHost: ${cluster_endpoint}
+k8sServicePort: "443"
+
 
 ## General values
 cluster:
