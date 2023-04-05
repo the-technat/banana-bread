@@ -26,6 +26,9 @@ contour:
     default: true
 
 envoy:
+  service:
+    annotations:
+      service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
   kind: deployment
   priorityClassName: "infra"
   resources:
@@ -44,8 +47,6 @@ envoy:
       requests:
         cpu: 25m
         memory: 50Mi
-  service:
-    annotations:
 
 defaultBackend:
   enabled: true

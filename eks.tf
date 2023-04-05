@@ -105,6 +105,19 @@ module "eks" {
       instance_types = ["t3a.medium", "t3.medium", "t2.medium"]
       subnet_ids     = module.vpc.private_subnets
       ami_id         = data.aws_ami.eks_default.image_id
+      desired_size   = 0 # by default we don't need AMD64 nodes
+      taints = [
+        {
+          key    = "node.cilium.io/agent-not-ready"
+          value  = "true"
+          effect = "NO_EXECUTE"
+        },
+        {
+          key    = "beta.kubernetes.io/arch"
+          value  = "amd64"
+          effect = "NO_EXECUTE"
+        }
+      ]
     }
   }
 

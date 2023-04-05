@@ -7,25 +7,26 @@ The last homelab I'll ever build
 Some specialities on this setup:
 
 - Only the EKS managed SG is used
-- Cilium in overlay mode with kube-proxy replacemement is used
+- Cilium in ENI-integrartion mode with kube-proxy replacemement is used
 - On cluster-level is designed fully-HA except the NAT gateway (only one for all AZs)
 
 ## Addons
 
 The following addons are setup:
 
-- [cilium](https://cilium.io): full overlay networking mode
+- [cilium](https://cilium.io): fully managing the network (ENI integration, kube-proxy replacement)
 - [aws-load-balancer-controller](https://kubernetes-sigs.github.io/aws-load-balancer-controller/v2.4/): Controller for provisioning Load Balancers in AWS
 - [argocd](https://argoproj.github.io/cd): Ready to deploy GitOps based apps
 - [cert-manager](https://cert-manager.io/): manage certificates in a k8s native way
+- [aws-efs-csi-driver](https://aws-ia.github.io/terraform-aws-eks-blueprints/main/add-ons/aws-efs-csi-driver/): managed by eks-blueprints
+- [aws-ebs-csi-driver]()
+- [cluster-autoscaler](https://aws-ia.github.io/terraform-aws-eks-blueprints/main/add-ons/aws-efs-csi-driver/): managed by eks-blueprints
+- [external-dns](https://aws-ia.github.io/terraform-aws-eks-blueprints/main/add-ons/external-dns/): managed by eks-blueprints
 
 ## To Do
 
 Always let some room for improvements:
 
-- [ ] Deploy cluster-autoscaler
-- [ ] Deploy aws-ebs-csi-driver
-- [ ] Deploy aws-efs-csi-driver
 - [ ] Deploy keda autoscaler
 - [ ] Deploy metrics-server
 
