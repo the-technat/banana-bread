@@ -29,6 +29,7 @@ Always let some room for improvements:
 
 - [ ] Deploy keda autoscaler
 - [ ] Deploy metrics-server
+- [ ] Configure cluster-autoscaler to prefer ARM64 nodes (and taint the other ones)
 
 ## Deployment
 
