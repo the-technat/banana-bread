@@ -84,10 +84,7 @@ resource "argocd_application" "app_of_apps" {
   }
 
   depends_on = [
-    module.eks,
-    helm_release.cilium,
-    helm_release.argocd,
-    module.eks.aws_eks_cluster
+    helm_release.argocd
   ]
 }
 
@@ -114,6 +111,7 @@ resource "helm_release" "argocd" {
   depends_on = [
     module.eks,
     helm_release.cilium,
+    helm_release.contour,
     kubernetes_priority_class_v1.infra
   ]
 }

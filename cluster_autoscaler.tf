@@ -14,6 +14,9 @@ module "cluster_autoscaler" {
   data_plane_wait_arn = join(",", [for group in module.eks.eks_managed_node_groups : group.node_group_arn])
 
   enable_cluster_autoscaler = true
+  cluster_autoscaler_helm_config = {
+    namespace = "aws"
+  }
 
   tags = local.tags
 

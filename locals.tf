@@ -10,6 +10,7 @@ locals {
 
   vpc_name = "banana-bread"
   vpc_cidr = "10.123.0.0/16"
+  cni_plugin = "vpc-cni" # or cilium
   azs      = slice(data.aws_availability_zones.available.names, 0, 3)
 
   cluster_admins = [

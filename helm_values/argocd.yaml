@@ -23,7 +23,7 @@ server:
   ingress:
     enabled: true
     annotations: {}
-    ingressClassName: "alb"
+    ingressClassName: "contour"
     hosts:
       - cd.cucumber.alleaffengaffen.ch
   priorityClassName: "infra"

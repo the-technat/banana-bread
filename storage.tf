@@ -15,6 +15,9 @@ module "eks_storage" {
 
   enable_amazon_eks_aws_ebs_csi_driver = true
   enable_aws_efs_csi_driver            = true
+  aws_efs_csi_driver_helm_config = {
+    namespace = "aws"
+  }
 
   tags = local.tags
 }

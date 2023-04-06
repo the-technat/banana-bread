@@ -2,6 +2,7 @@
 # Cilium
 ##############
 resource "helm_release" "cilium" {
+  count      = local.cni_plugin == "cilium" ? 1 : 0
   name       = "cilium"
   repository = "https://helm.cilium.io"
   chart      = "cilium"
@@ -22,6 +23,7 @@ resource "helm_release" "cilium" {
 }
 
 resource "null_resource" "purge_aws_networking" {
+  count = local.cni_plugin == "cilium" ? 1 : 0
   triggers = {
     eks = module.eks.cluster_endpoint # only do this when the cluster changes (e.g create/recreate)
   }

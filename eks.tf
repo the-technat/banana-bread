@@ -11,8 +11,22 @@ module "eks" {
       resolve_conflicts = "OVERWRITE"
 
     }
-    # kube-proxy is replaced by cilium
-    # aws-vpc-cni is replaced by cilium
+    kube-proxy = {
+      # if cilium is set, kube-proxy will be purged
+      most_recent = true
+    }
+    vpc-cni = {
+      # if cilium is set, vpc-cni will be purged
+      most_recent    = true
+      before_compute = true
+      configuration_values = jsonencode({
+        env = {
+          # Reference docs https://docs.aws.amazon.com/eks/latest/userguide/cni-increase-ip-addresses.html
+          ENABLE_PREFIX_DELEGATION = "true"
+          WARM_PREFIX_TARGET       = "1"
+        }
+      })
+    }
   }
 
   # Networking
@@ -79,10 +93,11 @@ module "eks" {
       }
     }
 
-    // enables SSM access to nodes (agent is preinstalled in the default eks AMI)
+    # IAM
     iam_role_additional_policies = {
       AmazonSSMManagedInstanceCore = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore",
     }
+    iam_role_attach_cni_policy = true
 
     // required since we specify the AMI to use
     // otherwise the nodes don't join

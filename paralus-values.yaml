@@ -1,0 +1,40 @@
+fqdn:
+  domain: bread.alleaffengaffen.ch
+
+ingress:
+  enabled: true
+  className: "contour"
+  # - Annotation for ingress resources. The ssl-passthrough annotation
+  # - is mandatory for ZTKA ingress.
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod
+    kubernetes.io/tls-acme: "true"
+  tls:
+   - secretName: paralus-tls
+     hosts:
+       - console.bread.alleaffengaffen.ch
+
+paralus:
+  automigrate: true
+  initialize:
+    partner: "alleaffengaffen"
+    partnerDesc: "alleaffengaffen"
+    partnerHost: "paralus.local"
+    org: "alleaffengaffen"
+    orgDesc: "alleaffengaffen org"
+    adminEmail: "banane@alleaffengaffen.ch"
+    adminFirstName: "Banana"
+    adminLastName: "Chocolate"
+
+analytics:
+  enable: false
+
+deploy:
+  contour:
+    enable: false
+  postgresql:
+    enable: true
+
+kratos:
+  kratos:
+    development: true

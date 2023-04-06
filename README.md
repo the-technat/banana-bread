@@ -30,6 +30,8 @@ Always let some room for improvements:
 - [ ] Deploy keda autoscaler
 - [ ] Deploy metrics-server
 - [ ] Configure cluster-autoscaler to prefer ARM64 nodes (and taint the other ones)
+- [ ] Cilium not working in any case (no free IPs errors)
+- [ ] Argo CD provider not working  (only one resource works)
 
 ## Deployment
 
