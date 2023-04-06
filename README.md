@@ -23,15 +23,16 @@ The following addons are setup:
 - [cluster-autoscaler](https://aws-ia.github.io/terraform-aws-eks-blueprints/main/add-ons/aws-efs-csi-driver/): managed by eks-blueprints
 - [external-dns](https://aws-ia.github.io/terraform-aws-eks-blueprints/main/add-ons/external-dns/): managed by eks-blueprints
 
-## To Do
+## To Do & Issues
 
 Always let some room for improvements:
 
 - [ ] Deploy keda autoscaler
 - [ ] Deploy metrics-server
 - [ ] Configure cluster-autoscaler to prefer ARM64 nodes (and taint the other ones)
-- [ ] Cilium not working in any case (no free IPs errors)
-- [ ] Argo CD provider not working  (only one resource works)
+- [ ] External-dns is broken (var required but cannot be given to the module)
+- [ ] Cilium not working in all case (no free IPs errors)
+- [ ] Argo CD provider not working (only one resource works, then we have permission denied)
 
 ## Deployment
 
