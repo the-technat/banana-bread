@@ -17,6 +17,7 @@ resource "helm_release" "contour" {
   depends_on = [
     module.eks,
     helm_release.cilium,
-    kubernetes_priority_class_v1.infra
+    kubernetes_priority_class_v1.infra,
+    helm_release.cert_manager
   ]
 }
