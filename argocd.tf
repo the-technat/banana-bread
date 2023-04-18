@@ -14,7 +14,6 @@ resource "kubernetes_priority_class_v1" "infra" {
 }
 
 resource "argocd_project" "apps" {
-  count = 0
   metadata {
     name      = "apps"
     namespace = "argocd"
@@ -43,7 +42,6 @@ resource "argocd_project" "apps" {
 }
 
 resource "argocd_application" "app_of_apps" {
-  count = 0
   metadata {
     name      = "app-of-apps"
     namespace = "argocd"
