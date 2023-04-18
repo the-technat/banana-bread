@@ -30,8 +30,6 @@ Always let some room for improvements:
 - [ ] Deploy keda autoscaler
 - [ ] Deploy metrics-server
 - [ ] Configure cluster-autoscaler to prefer ARM64 nodes (and taint the other ones)
-- [ ] external-dns is broken (var required but cannot be given to the module)
-- [ ] Argo CD provider not working (only one resource works, then we have permission denied)
 
 ## Deployment
 

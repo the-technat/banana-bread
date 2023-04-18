@@ -1,27 +1,43 @@
 ##########
-# EKS Blueprints managed external-dns
+# external-dns
 ##########
-module "external_dns" {
-  count  = 0
-  source = "github.com/aws-ia/terraform-aws-eks-blueprints.git/modules/kubernetes-addons"
+resource "helm_release" "external_dns" {
+  name             = "external-dns"
+  repository       = "https://kubernetes-sigs.github.io/external-dns"
+  chart            = "external-dns"
+  version          = "6.18.x"
+  namespace        = "aws"
+  create_namespace = true
 
-
-  eks_cluster_id       = module.eks.cluster_name
-  eks_cluster_endpoint = module.eks.cluster_endpoint
-  eks_oidc_provider    = module.eks.oidc_provider
-  eks_cluster_version  = module.eks.cluster_version
-
-  # Wait on the node group(s) before provisioning addons
-  data_plane_wait_arn = join(",", [for group in module.eks.eks_managed_node_groups : group.node_group_arn])
-
-  enable_external_dns = true
-  external_dns_route53_zone_arns = [
-    "arn:aws:route53::${local.account_id}:hostedzone/Z1234567890"
+  values = [
+    templatefile("${path.module}/helm_values/external_dns.yaml", {
+      region       = local.region
+      cluster_name = local.cluster_name
+      role_arn     = module.aws_external_dns_irsa.iam_role_arn
+    })
   ]
-
-  tags = local.tags
 
   depends_on = [
-    module.eks
+    module.eks,
+    helm_release.cilium,
+    module.aws_external_dns_irsa
   ]
 }
+
+module "aws_external_dns_irsa" {
+  source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
+  version = "~> 5.0"
+
+  role_name_prefix           = "external-dns"
+  attach_external_dns_policy = true
+
+  oidc_providers = {
+    main = {
+      provider_arn               = module.eks.oidc_provider_arn
+      namespace_service_accounts = ["aws:external-dns"]
+    }
+  }
+
+  tags = local.tags
+}
+

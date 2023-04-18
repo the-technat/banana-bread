@@ -1,0 +1,12 @@
+serviceAccount:
+  annotations:
+    eks.amazonaws.com/role-arn: ${role_arn}
+
+priorityClassName: "infra"
+env:
+  - name: AWS_DEFAULT_REGION
+    value: ${region}
+triggerLoopOnEvent: true
+policy: sync
+txtOwnerId: ${cluster_name}
+provider: aws
