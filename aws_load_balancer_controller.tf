@@ -14,6 +14,7 @@ resource "helm_release" "aws_load_balancer_controller" {
       region       = local.region
       cluster_name = local.cluster_name
       role_arn     = module.aws_load_balancer_controller_irsa.iam_role_arn
+      vpcID        = module.vpc.vpc_id
     })
   ]
 
