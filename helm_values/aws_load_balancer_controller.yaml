@@ -5,6 +5,9 @@ region: ${region}
 priorityClassName: infra
 defaultSSLPolicy: "ELBSecurityPolicy-FS-1-2-Res-2020-10"
 
+hostNetwork: true  # required due to cilium overlay
+dnsPolicy: 'ClusterFirstWithHostNet'
+
 serviceAccount:
   annotations:
     eks.amazonaws.com/role-arn: ${role_arn}

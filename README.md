@@ -7,7 +7,7 @@ The last homelab I'll ever build
 Some specialities on this setup:
 
 - Only the EKS managed SG is used
-- Cilium in ENI-integrartion mode with kube-proxy replacemement is used
+- Cilium in overlay mode with kube-proxy replacemement is used
 - On cluster-level is designed fully-HA except the NAT gateway (only one for all AZs)
 
 ## Addons
@@ -30,8 +30,7 @@ Always let some room for improvements:
 - [ ] Deploy keda autoscaler
 - [ ] Deploy metrics-server
 - [ ] Configure cluster-autoscaler to prefer ARM64 nodes (and taint the other ones)
-- [ ] External-dns is broken (var required but cannot be given to the module)
-- [ ] Cilium not working in all case (no free IPs errors)
+- [ ] external-dns is broken (var required but cannot be given to the module)
 - [ ] Argo CD provider not working (only one resource works, then we have permission denied)
 
 ## Deployment

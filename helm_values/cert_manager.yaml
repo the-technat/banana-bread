@@ -1,6 +1,9 @@
 global:
   priorityClassName: "infra"
 
+hostNetwork: true # cilium overlay mode
+podDnsPolicy: 'ClusterFirstWithHostNet'
+
 installCRDs: true
 
 resources:
@@ -25,6 +28,8 @@ containerSecurityContext:
   runAsNonRoot: true
 
 webhook:
+  config:
+    securePort: 10250
   securityContext:
     runAsNonRoot: true
     seccompProfile:
