@@ -1,8 +1,7 @@
 global:
   priorityClassName: "infra"
 
-#hostNetwork: true # cilium overlay mode
-#podDnsPolicy: 'ClusterFirstWithHostNet'
+podDnsPolicy: 'ClusterFirstWithHostNet'
 
 installCRDs: true
 
@@ -28,8 +27,11 @@ containerSecurityContext:
   runAsNonRoot: true
 
 webhook:
-#  config:
-#    securePort: 10250
+  hostNetwork: true
+  config:
+    apiVersion: webhook.config.cert-manager.io/v1alpha1
+    kind: WebhookConfiguration
+    securePort: 10260
   securityContext:
     runAsNonRoot: true
     seccompProfile:
