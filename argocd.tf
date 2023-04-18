@@ -82,7 +82,10 @@ resource "argocd_application" "app_of_apps" {
   }
 
   depends_on = [
-    helm_release.argocd
+    module.eks,
+    helm_release.cilium,
+    helm_release.argocd,
+    argocd_project.apps
   ]
 }
 
