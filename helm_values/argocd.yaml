@@ -28,6 +28,10 @@ server:
     ingressClassName: "contour"
     hosts:
       - cd.bread.alleaffengaffen.ch
+    tls:
+    - secretName: argocd-tls
+      hosts:
+      - cd.bread.alleaffengaffen.ch
   priorityClassName: "infra"
   containerSecurityContext:
     allowPrivilegeEscalation: false

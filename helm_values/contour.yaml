@@ -1,4 +1,4 @@
-extraDeploy: 
+extraDeploy:
 - apiVersion: cert-manager.io/v1
   kind: ClusterIssuer
   metadata:
@@ -27,7 +27,6 @@ extraDeploy:
       - http01:
           ingress:
             class: contour
-
 
 
 ## @param configInline [object] Specifies Contour's configuration directly in YAML format
