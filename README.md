@@ -22,6 +22,7 @@ The following addons are setup:
 - [aws-ebs-csi-driver]()
 - [cluster-autoscaler](https://aws-ia.github.io/terraform-aws-eks-blueprints/main/add-ons/aws-efs-csi-driver/): managed by eks-blueprints
 - [external-dns](https://aws-ia.github.io/terraform-aws-eks-blueprints/main/add-ons/external-dns/): managed by eks-blueprints
+- [metrics-server](https://aws-ia.github.io/terraform-aws-eks-blueprints/main/add-ons/metrics-server/)
 
 ## To Do & Issues
 
