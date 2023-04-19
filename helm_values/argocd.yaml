@@ -4,8 +4,8 @@ configs:
     server.rbac.log.enforce.enable: "true"
     exec.enabled: "true"
     admin.enabled: "true"
-  params:
-    server.insecure: true
+  #params:
+    #server.insecure: true
   rbac:
     policy.default: role:readonly
 
@@ -20,11 +20,14 @@ server:
     - maxSkew: 1
       topologyKey: topology.kubernetes.io/zone
       whenUnsatisfiable: DoNotSchedule
+  service:
+    annotations:
+      projectcontour.io/upstream-protocol.tls: "443"
   ingress:
     enabled: true
+    https: true
     annotations:
       cert-manager.io/cluster-issuer: letsencrypt-prod
-      ingress.kubernetes.io/force-ssl-redirect: "true"
     ingressClassName: "contour"
     hosts:
       - cd.bread.alleaffengaffen.ch
