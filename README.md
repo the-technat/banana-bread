@@ -14,12 +14,12 @@ Some specialities on this setup:
 
 The following addons are setup:
 
-- [cilium](https://cilium.io): fully managing the network (ENI integration, kube-proxy replacement)
+- [cilium](https://cilium.io): fully managing the network (overlay-mode, kube-proxy replacement)
 - [aws-load-balancer-controller](https://kubernetes-sigs.github.io/aws-load-balancer-controller/v2.4/): Controller for provisioning Load Balancers in AWS
 - [argocd](https://argoproj.github.io/cd): Ready to deploy GitOps based apps
 - [cert-manager](https://cert-manager.io/): manage certificates in a k8s native way
 - [aws-efs-csi-driver](https://aws-ia.github.io/terraform-aws-eks-blueprints/main/add-ons/aws-efs-csi-driver/): managed by eks-blueprints
-- [aws-ebs-csi-driver]()
+- [aws-ebs-csi-driver](https://github.com/kubernetes-sigs/aws-ebs-csi-driver/tree/master): managed by eks-blueprints
 - [cluster-autoscaler](https://aws-ia.github.io/terraform-aws-eks-blueprints/main/add-ons/aws-efs-csi-driver/): managed by eks-blueprints
 - [external-dns](https://aws-ia.github.io/terraform-aws-eks-blueprints/main/add-ons/external-dns/): managed by eks-blueprints
 - [metrics-server](https://aws-ia.github.io/terraform-aws-eks-blueprints/main/add-ons/metrics-server/)
