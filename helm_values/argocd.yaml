@@ -22,10 +22,12 @@ server:
       whenUnsatisfiable: DoNotSchedule
   ingress:
     enabled: true
-    annotations: {}
+    annotations:
+      cert-manager.io/cluster-issuer: letsencrypt-prod
+      ingress.kubernetes.io/force-ssl-redirect: "true"
     ingressClassName: "contour"
     hosts:
-      - cd.cucumber.alleaffengaffen.ch
+      - cd.bread.alleaffengaffen.ch
   priorityClassName: "infra"
   containerSecurityContext:
     allowPrivilegeEscalation: false
