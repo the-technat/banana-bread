@@ -5,7 +5,7 @@ configs:
     exec.enabled: "true"
     admin.enabled: "true"
   #params:
-    #server.insecure: true
+  #server.insecure: true
   rbac:
     policy.default: role:readonly
 
@@ -32,9 +32,9 @@ server:
     hosts:
       - cd.bread.alleaffengaffen.ch
     tls:
-    - secretName: argocd-tls
-      hosts:
-      - cd.bread.alleaffengaffen.ch
+      - secretName: argocd-tls
+        hosts:
+          - cd.bread.alleaffengaffen.ch
   priorityClassName: "infra"
   containerSecurityContext:
     allowPrivilegeEscalation: false

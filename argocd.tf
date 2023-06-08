@@ -137,7 +137,6 @@ resource "aws_secretsmanager_secret_version" "argocd" {
   secret_string = random_password.argocd.result
 }
 
-
 data "aws_iam_policy_document" "argocd" {
   statement {
     sid    = "EnableAdminsToReadSecret"

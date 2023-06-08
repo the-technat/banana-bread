@@ -9,7 +9,6 @@ module "eks" {
     coredns = {
       most_recent       = true
       resolve_conflicts = "OVERWRITE"
-
     }
     kube-proxy = {
       # if cilium is set, kube-proxy will be purged

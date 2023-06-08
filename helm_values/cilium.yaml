@@ -1,4 +1,4 @@
-## Overlay values
+## ENI Integration values
 # https://docs.cilium.io/en/v1.13/installation/k8s-install-helm/#install-cilium -> eks
 eni:
   enabled: true
