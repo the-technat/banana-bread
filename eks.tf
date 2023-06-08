@@ -8,7 +8,6 @@ module "eks" {
   cluster_addons = {
     coredns = {
       most_recent       = true
-      resolve_conflicts = "OVERWRITE"
     }
     kube-proxy = {
       # if cilium is set, kube-proxy will be purged
@@ -65,8 +64,8 @@ module "eks" {
     # Compute
     capacity_type = "SPOT" # is it a lab or not?
     min_size      = 0
-    max_size      = 3
-    desired_size  = 1
+    max_size      = 5
+    desired_size  = 2
 
     # Networking
     network_interfaces = [
