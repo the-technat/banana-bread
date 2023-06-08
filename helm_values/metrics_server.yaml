@@ -1,0 +1,4 @@
+priorityClassName: infra
+containerPort: 10270
+hostNetwork:
+  enabled: true
