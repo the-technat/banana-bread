@@ -130,7 +130,8 @@ module "eks" {
       ami_type       = "AL2_x86_64"
       instance_types = ["t3a.medium", "t3.medium", "t2.medium"]
       subnet_ids     = module.vpc.private_subnets
-      ami_id         = data.aws_ami.eks_default.image_id
+      # ami_id         = data.aws_ami.eks_default.image_id
+      ami_id ="ami-0523dba30d36cfe4b"
 
     }
   }
