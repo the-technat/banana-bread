@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: dnsping
+  namespace: dnsping
+  labels:
+    app.kubernetes.io/name: dnsping
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: dnsping
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: dnsping
+    spec:
+      containers:
+        - name: dnsping
+          image: docker.tools.post.ch/kubernetes/fortio/dnsping:1.5.0
+          args:
+            - "technat.ch"
+            - "172.20.0.10"
+          resources:
+            limits:
+              memory: "128Mi"
+              cpu: "500m"
+          securityContext:
+            runAsUser: 1000
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
