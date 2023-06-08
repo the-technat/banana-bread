@@ -1,16 +1,16 @@
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
-  name: helm-guestbook
+  name: dnsping
   namespace: argocd
 spec:
   destination:
-    namespace: helm-guestbook
+    namespace: dnsping
     server: https://kubernetes.default.svc
   project: default
   source:
-    path: helm-guestbook
-    repoURL: https://github.com/argoproj/argocd-example-apps
+    path: apps/manifests/dnsping
+    repoURL: https://github.com/alleaffengaffen/banana-bread
     targetRevision: HEAD
   syncPolicy:
     automated:

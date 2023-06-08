@@ -2,7 +2,7 @@
 # Metrics Server
 ##########
 resource "helm_release" "metrics_server" {
-  name             = "argocd"
+  name             = "metrics-server"
   repository       = "https://kubernetes-sigs.github.io/metrics-server/"
   chart            = "metrics-server"
   version          = "3.x.x"

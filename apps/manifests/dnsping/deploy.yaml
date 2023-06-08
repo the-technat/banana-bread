@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
         - name: dnsping
-          image: docker.tools.post.ch/kubernetes/fortio/dnsping:1.5.0
+          image: fortio/dnsping:1.5.0
           args:
             - "technat.ch"
             - "172.20.0.10"
