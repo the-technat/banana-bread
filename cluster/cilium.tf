@@ -2,7 +2,6 @@
 # Cilium
 ##############
 resource "helm_release" "cilium" {
-  count      = local.cni_plugin == "cilium" ? 1 : 0
   name       = "cilium"
   repository = "https://helm.cilium.io"
   chart      = "cilium"
@@ -12,7 +11,7 @@ resource "helm_release" "cilium" {
 
   values = [
     templatefile("${path.module}/helm_values/cilium.yaml", {
-      cluster_endpoint = trim(module.eks.cluster_endpoint, "https://")
+      cluster_endpoint = trim(module.eks.cluster_endpoint, "https://") # would be used for kube-proxy replacement
     })
   ]
 
@@ -23,7 +22,7 @@ resource "helm_release" "cilium" {
 }
 
 resource "null_resource" "purge_aws_networking" {
-  count = local.cni_plugin == "cilium" ? 1 : 0
+  count = 0 
   triggers = {
     eks = module.eks.cluster_endpoint # only do this when the cluster changes (e.g create/recreate)
   }

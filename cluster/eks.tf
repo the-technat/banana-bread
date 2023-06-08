@@ -42,13 +42,13 @@ module "eks" {
   eks_managed_node_group_defaults = {
     # General
     use_name_prefix = true
-    taints = local.cni_plugin == "cilium" ? [
+    taints = [
       {
         key    = "node.cilium.io/agent-not-ready"
         value  = "true"
         effect = "NO_EXECUTE"
       }
-    ] : []
+    ] 
     metadata_options = {
       http_endpoint               = "enabled"
       http_tokens                 = "required"
