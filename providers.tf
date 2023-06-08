@@ -31,7 +31,7 @@ provider "argocd" {
   port_forward                = true
   port_forward_with_namespace = "argocd"
   plain_text                  = true
-  # insecure                    = true
+  insecure                    = true
 
   kubernetes {
     host                   = module.eks.cluster_endpoint

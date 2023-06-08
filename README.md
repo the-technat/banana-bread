@@ -28,6 +28,7 @@ Always let some room for improvements:
 - [ ] Deploy ebs-csi-controller
 - [ ] Deploy cluster-autoscaler
 - [ ] Configure cluster-autoscaler to prefer ARM64 nodes (and taint the other ones)
+- [ ] Fix issue that all helm charts are updated on every run
 
 ## Addon Rules
 
