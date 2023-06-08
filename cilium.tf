@@ -34,7 +34,6 @@ resource "null_resource" "purge_aws_networking" {
       curl -LO https://dl.k8s.io/release/v1.25.8/bin/linux/amd64/kubectl
       chmod 0755 ./kubectl
       ./kubectl -n kube-system delete daemonset aws-node --ignore-not-found
-      ./kubectl -n kube-system delete daemonset kube-proxy --ignore-not-found
     EOT
   }
 }
