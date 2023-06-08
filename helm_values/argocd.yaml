@@ -4,8 +4,8 @@ configs:
     server.rbac.log.enforce.enable: "true"
     exec.enabled: "true"
     admin.enabled: "true"
-  #params:
-  #server.insecure: true
+  params:
+    server.insecure: true
   rbac:
     policy.default: role:readonly
 
@@ -22,7 +22,7 @@ server:
       whenUnsatisfiable: DoNotSchedule
   service:
     annotations:
-      projectcontour.io/upstream-protocol.tls: "443"
+      # projectcontour.io/upstream-protocol.tls: "444" # requires configs.params.server.insecure=false
   ingress:
     enabled: true
     https: true
