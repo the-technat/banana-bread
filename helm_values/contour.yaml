@@ -5,7 +5,7 @@ extraDeploy:
       name: letsencrypt-staging
     spec:
       acme:
-        email: banane@alleaffengaffen.ch
+        email: ${acme_mail}
         server: https://acme-staging-v02.api.letsencrypt.org/directory
         privateKeySecretRef:
           name: letsencrypt-staging
@@ -19,7 +19,7 @@ extraDeploy:
       name: letsencrypt-prod
     spec:
       acme:
-        email: banane@alleaffengaffen.ch
+        email: ${acme_mail}
         server: https://acme-v02.api.letsencrypt.org/directory
         privateKeySecretRef:
           name: letsencrypt-prod

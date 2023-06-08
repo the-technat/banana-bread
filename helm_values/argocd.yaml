@@ -1,6 +1,6 @@
 configs:
   cm:
-    url: "https://cd.bread.alleaffengaffen.ch"
+    url: "https://cd.${dns_zone}"
     server.rbac.log.enforce.enable: "true"
     exec.enabled: "true"
     admin.enabled: "true"
@@ -30,11 +30,11 @@ server:
       cert-manager.io/cluster-issuer: letsencrypt-prod
     ingressClassName: "contour"
     hosts:
-      - cd.bread.alleaffengaffen.ch
+      - cd.${dns_zone}
     tls:
       - secretName: argocd-tls
         hosts:
-          - cd.bread.alleaffengaffen.ch
+          - cd.${dns_zone}
   priorityClassName: "infra"
   containerSecurityContext:
     allowPrivilegeEscalation: false

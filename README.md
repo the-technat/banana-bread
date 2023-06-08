@@ -48,9 +48,10 @@ Here's the detailed version on how to deploy:
 
 1. Create an Account in the [Terraform Cloud](https://app.terraform.io)
 2. Create an [AWS Account](https://aws.amazon.com)
-3. Create a new IAM user, assign it the `AdministratorAccess` role and generate a pair of Access keys
-4. Create a new Terraform Workspace, configure the VCS-driven workflow and add two environment variables `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`
-5. Start your first run (won't be done automatically)
+3. Create a Route53 DNS Zone and replace my `dns_zone` var in `locals.tf`
+4. Create a new IAM user, assign it the `AdministratorAccess` role and generate a pair of Access keys
+5. Create a new Terraform Workspace, configure the VCS-driven workflow and add two environment variables `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`
+6. Start your first run (won't be done automatically)
 
 ## Destruction
 

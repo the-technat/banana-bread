@@ -7,7 +7,7 @@ module "eks" {
 
   cluster_addons = {
     coredns = {
-      most_recent       = true
+      most_recent = true
     }
     kube-proxy = {
       # if cilium is set, kube-proxy will be purged

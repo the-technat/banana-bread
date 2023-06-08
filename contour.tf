@@ -11,6 +11,7 @@ resource "helm_release" "contour" {
 
   values = [
     templatefile("${path.module}/helm_values/contour.yaml", {
+      acme_mail = local.acme_mail
     })
   ]
 

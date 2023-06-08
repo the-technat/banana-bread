@@ -101,7 +101,9 @@ resource "helm_release" "argocd" {
   namespace        = "argocd"
   create_namespace = true
   values = [
-    "${file("${path.module}/helm_values/argocd.yaml")}"
+    templatefile("${path.module}/helm_values/argocd.yaml", {
+      dns_zone = local.dns_zone
+    })
   ]
 
   set_sensitive {
