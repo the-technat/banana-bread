@@ -5,7 +5,7 @@ resource "helm_release" "cilium" {
   name       = "cilium"
   repository = "https://helm.cilium.io"
   chart      = "cilium"
-  version    = "1.12.x"
+  version    = "1.12.10"
   namespace  = "kube-system"
   wait       = true
 
@@ -22,7 +22,6 @@ resource "helm_release" "cilium" {
 }
 
 resource "null_resource" "purge_aws_networking" {
-  count = 0 
   triggers = {
     eks = module.eks.cluster_endpoint # only do this when the cluster changes (e.g create/recreate)
   }
