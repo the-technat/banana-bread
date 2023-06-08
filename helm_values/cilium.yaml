@@ -1,12 +1,16 @@
 ## Overlay values
 # https://docs.cilium.io/en/v1.13/installation/k8s-install-helm/#install-cilium -> eks
+eni:
+  enabled: true
+ipam:
+  mode: eni
 egressMasqueradeInterfaces: eth0
+tunnel: disabled
 bpf:
-  hostLegacyRouting: false
-  masquerade: true
-kubeProxyReplacement: "strict"
-k8sServiceHost: ${cluster_endpoint}
-k8sServicePort: "443"
+  hostLegacyRouting: true
+kubeProxyReplacement: "disabled"
+#k8sServiceHost: ${cluster_endpoint}
+#k8sServicePort: "443"
 
 ## General values
 cluster:
