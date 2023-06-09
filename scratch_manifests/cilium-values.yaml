@@ -1,0 +1,84 @@
+USER-SUPPLIED VALUES:
+annotateK8sNode: true
+bpf:
+  hostLegacyRouting: true
+cluster:
+  name: banana-bread
+containerRuntime:
+  integration: containerd
+  socketPath: /var/run/containerd/containerd.sock
+egressMasqueradeInterfaces: eth0
+eni:
+  enabled: true
+hubble:
+  enabled: true
+  relay:
+    enabled: true
+    resources:
+      limits:
+        cpu: 1000m
+        memory: 1024M
+      requests:
+        cpu: 100m
+        memory: 64Mi
+    rollOutPods: true
+  rollOutPods: true
+  ui:
+    backend:
+      resources:
+        limits:
+          cpu: 1000m
+          memory: 1024M
+        requests:
+          cpu: 100m
+          memory: 64Mi
+    enabled: true
+    frontend:
+      resources:
+        limits:
+          cpu: 1000m
+          memory: 1024M
+        requests:
+          cpu: 100m
+          memory: 64Mi
+    proxy:
+      resources:
+        limits:
+          cpu: 500m
+          memory: 256M
+        requests:
+          cpu: 100m
+          memory: 24Mi
+    rollOutPods: true
+    securityContext:
+      enabled: true
+      fsGroup: 10001
+      runAsGroup: 10001
+      runAsUser: 10001
+extraConfig:
+  tofqdns-endpoint-max-ip-per-hostname: 500
+ipam:
+  mode: eni
+kubeProxyReplacement: disabled
+operator:
+  prometheus:
+    enabled: true
+    serviceMonitor:
+      enabled: false
+  replicas: 1
+  resources:
+    limits:
+      cpu: 1000m
+      memory: 1Gi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+  rollOutPods: true
+policyEnforcementMode: default
+priorityClassName: system-node-critical
+resources:
+  requests:
+    cpu: 300m
+    memory: 300Mi
+rollOutCiliumPods: true
+tunnel: disabled

@@ -1,3 +1,8 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: issue-20650
+---
 apiVersion: cilium.io/v2
 kind: CiliumNetworkPolicy
 metadata:
