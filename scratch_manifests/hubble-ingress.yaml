@@ -1,0 +1,25 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-prod-nginx
+    ingress.kubernetes.io/force-ssl-redirect: "true"
+  name: hubble-ui
+  namespace: kube-system
+spec:
+  ingressClassName: nginx
+  rules:
+    - host: hubble.bread.alleaffengaffen.ch
+      http:
+        paths:
+          - backend:
+              service:
+                name: hubble-ui
+                port:
+                  number: 80
+            path: /
+            pathType: Prefix
+  tls:
+    - hosts:
+        - hubble.bread.alleaffengaffen.ch
+      secretName: hubble-ui-tls

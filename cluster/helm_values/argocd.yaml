@@ -27,9 +27,9 @@ server:
     enabled: true
     https: true
     annotations:
-      cert-manager.io/cluster-issuer: letsencrypt-prod
+      cert-manager.io/cluster-issuer: letsencrypt-prod-nginx
       ingress.kubernetes.io/force-ssl-redirect: "true" # not required if you do tls-passthrough
-    ingressClassName: "contour"
+    ingressClassName: "nginx"
     hosts:
       - cd.${dns_zone}
     tls:
