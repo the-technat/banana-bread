@@ -8,6 +8,7 @@ resource "helm_release" "cilium" {
   version    = "1.12.10"
   namespace  = "kube-system"
   wait       = true
+  timeout    = 3600
 
   values = [
     templatefile("${path.module}/helm_values/cilium.yaml", {

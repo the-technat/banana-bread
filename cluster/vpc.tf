@@ -10,9 +10,9 @@ module "vpc" {
   public_subnets  = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k)]
   private_subnets = [for k, v in local.azs : cidrsubnet(local.vpc_cidr, 8, k + 10)]
 
-  # enable_nat_gateway     = true
-  # single_nat_gateway     = true
-  enable_dns_hostnames   = true
+  enable_nat_gateway   = true
+  single_nat_gateway   = true
+  enable_dns_hostnames = true
 
   public_subnet_tags = {
     "kubernetes.io/role/elb"                      = 1
