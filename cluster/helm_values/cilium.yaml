@@ -1,28 +1,28 @@
 ## cni-chaining values
 # https://docs.cilium.io/en/stable/installation/cni-chaining-aws-cni/
-# cni:
-#   chainingMode: aws-cni
-#   exclusive: false
-# enableIPv4Masquerade: false
-# tunnel: disabled
-# endpointRoutes:
-#   enabled: true
-# remoteNodeIdentity: false
-# bpf:
-#   # explicitly set hostLegacy routing, required since EKS 1.24
-#   # somewhat related https://github.com/cilium/cilium/issues/20677
-#   hostLegacyRouting: true
+cni:
+  chainingMode: aws-cni
+  exclusive: false
+enableIPv4Masquerade: false
+tunnel: disabled
+endpointRoutes:
+  enabled: true
+remoteNodeIdentity: false
+bpf:
+  # explicitly set hostLegacy routing, required since EKS 1.24
+  # somewhat related https://github.com/cilium/cilium/issues/20677
+  hostLegacyRouting: true
 
 ## ENI Integration values
 # https://docs.cilium.io/en/v1.13/installation/k8s-install-helm/#install-cilium -> eks
-eni:
-  enabled: true
-ipam:
-  mode: eni
-egressMasqueradeInterfaces: eth0
-tunnel: disabled
-bpf:
-  hostLegacyRouting: true
+# eni:
+#   enabled: true
+# ipam:
+#   mode: eni
+# egressMasqueradeInterfaces: eth0
+# tunnel: disabled
+# bpf:
+#   hostLegacyRouting: true
 
 # kube-proxy replacement
 # also requires ./kubectl -n kube-system delete daemonset kube-proxy --ignore-not-found in purge_aws_networking

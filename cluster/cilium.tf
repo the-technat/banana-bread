@@ -22,6 +22,7 @@ resource "helm_release" "cilium" {
 }
 
 resource "null_resource" "purge_aws_networking" {
+  count = 0
   triggers = {
     eks = module.eks.cluster_endpoint # only do this when the cluster changes (e.g create/recreate)
   }
