@@ -1,4 +1,4 @@
-priorityClassName: infra
+priorityClassName: system-cluster-critical
 containerPort: 10270
 hostNetwork:
   enabled: true

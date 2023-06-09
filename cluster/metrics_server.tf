@@ -16,6 +16,5 @@ resource "helm_release" "metrics_server" {
   depends_on = [
     module.eks,
     helm_release.cilium,
-    kubernetes_priority_class_v1.infra
   ]
 }
