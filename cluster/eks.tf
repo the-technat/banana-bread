@@ -27,6 +27,10 @@ module "eks" {
     }
   }
 
+  # Logging
+  cloudwatch_log_group_retention_in_days = 30
+  cloudwatch_log_group_kms_key_id        = module.cloudwatch_kms_key.key_arn
+
   # Networking
   vpc_id                         = module.vpc.vpc_id
   subnet_ids                     = module.vpc.private_subnets
@@ -158,11 +162,61 @@ data "aws_ami" "eks_default_arm" {
   }
 }
 
+
+module "cloudwatch_kms_key" {
+  source  = "terraform-aws-modules/kms/aws"
+  version = "~> 1.5"
+
+  description             = "Customer managed key to encrypt EKS Cloudwatch Logs"
+  deletion_window_in_days = 7
+
+  # Policy
+  key_administrators = concat([data.aws_caller_identity.current.arn], local.cluster_admin_arns)
+  key_owners         = concat([data.aws_caller_identity.current.arn], local.cluster_admin_arns)
+  key_statements = [
+    {
+      sid = "CloudWatchLogs"
+      actions = [
+        "kms:Encrypt*",
+        "kms:Decrypt*",
+        "kms:ReEncrypt*",
+        "kms:GenerateDataKey*",
+        "kms:Describe*"
+      ]
+      resources = ["*"]
+
+      principals = [
+        {
+          type        = "Service"
+          identifiers = ["logs.${local.region}.amazonaws.com"]
+        }
+      ]
+
+      conditions = [
+        {
+          test     = "ArnLike"
+          variable = "kms:EncryptionContext:aws:logs:arn"
+          values = [
+            "arn:aws:logs:${local.region}:${data.aws_caller_identity.current.account_id}:log-group:*",
+          ]
+        }
+      ]
+    }
+  ]
+
+  # Aliases
+  aliases = ["eks/${local.cluster_name}/cloudwatch"]
+
+  tags = local.tags
+}
+
+
 module "ebs_kms_key" {
   source  = "terraform-aws-modules/kms/aws"
   version = "~> 1.5"
 
-  description = "Customer managed key to encrypt EKS managed node group volumes"
+  description             = "Customer managed key to encrypt EKS managed node group volumes"
+  deletion_window_in_days = 7
 
   # Policy
   key_administrators = concat([data.aws_caller_identity.current.arn], local.cluster_admin_arns)

@@ -3,6 +3,7 @@ cloudProvider: aws
 priorityClassName: "infra"
 autoDiscovery:
   clusterName: ${cluster_name}
+fullnameOverride: "cluster-autoscaler"
 
 containerSecurityContext:
   allowPrivilegeEscalation: false
@@ -34,6 +35,7 @@ extraArgs:
 
 rbac:
   serviceAccount:
+    name: "cluster-autoscaler"
     annotations:
       eks.amazonaws.com/role-arn: ${role_arn}
 
