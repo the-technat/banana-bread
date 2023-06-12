@@ -36,7 +36,9 @@ module "eks" {
 
   # IAM
   manage_aws_auth_configmap = true
+  enable_irsa               = true
   aws_auth_users            = local.cluster_admins
+  kms_key_owners            = local.cluster_admin_arns # required for us to delete the resources created by another account
 
   // settings in this block apply to all nodes groups
   eks_managed_node_group_defaults = {
@@ -59,7 +61,6 @@ module "eks" {
       max_unavailable_percentage = 33 # module's default, stable but still fast
     }
     force_update_version = true # after 15min of unsuccessful draining, pods are force-killed
-
 
     # Compute
     capacity_type = "SPOT" # is it a lab or not?
@@ -165,6 +166,7 @@ module "ebs_kms_key" {
 
   # Policy
   key_administrators = concat([data.aws_caller_identity.current.arn], local.cluster_admin_arns)
+  key_owners         = concat([data.aws_caller_identity.current.arn], local.cluster_admin_arns)
   key_service_roles_for_autoscaling = [
     # required for the ASG to manage encrypted volumes for nodes
     "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling",

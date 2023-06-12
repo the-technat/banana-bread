@@ -20,6 +20,11 @@ locals {
       username = "banana"
       groups   = ["system:masters"]
     },
+    {
+      userarn  = "arn:aws:iam::${local.account_id}:user/nuker"
+      username = "nuker"
+      groups   = ["system:masters"]
+    },
   ]
   cluster_admin_arns = formatlist("%s", local.cluster_admins[*].userarn)
 }
