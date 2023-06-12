@@ -37,3 +37,35 @@ resource "null_resource" "purge_aws_networking" {
     EOT
   }
 }
+
+resource "kubernetes_ingress_v1" "hubble_ingress" {
+  metadata {
+    name = "hubble-ui"
+  }
+
+  spec {
+    ingress_class_name = "nginx"
+    rule {
+      host = "hubble.${local.dns_zone}"
+      http {
+        path {
+          backend {
+            service {
+              name = "hubble-ui"
+              port {
+                number = 80
+              }
+            }
+          }
+
+          path = "/"
+        }
+      }
+    }
+
+    tls {
+      hosts       = ["hubble.${local.dns_zone}"]
+      secret_name = "hubble-ui-tls"
+    }
+  }
+}

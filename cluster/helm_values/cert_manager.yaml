@@ -7,7 +7,7 @@ installCRDs: true
 
 # we support ARM!
 tolerations:
-  - operator: Equals
+  - operator: Equal
     key: "beta.kubernetes.io/arch"
     value: "arm64"
     effect: "NoExecute"
@@ -56,7 +56,7 @@ webhook:
       cpu: 1
       memory: 1Gi
   tolerations:
-    - operator: Equals
+    - operator: Equal
       key: "beta.kubernetes.io/arch"
       value: "arm64"
       effect: "NoExecute"
@@ -97,7 +97,7 @@ startupapicheck:
     readOnlyRootFilesystem: true
     runAsNonRoot: true
   tolerations:
-    - operator: Equals
+    - operator: Equal
       key: "beta.kubernetes.io/arch"
       value: "arm64"
       effect: "NoExecute"
