@@ -5,13 +5,13 @@ locals {
   }
   region          = "sa-east-1" # zurich has not yet all available instance types + a lab should be as cheap as possible
   cluster_name    = "banana-bread"
-  cluster_version = "1.25"
+  cluster_version = "1.26"
   account_id      = "298410952490"
 
-  vpc_name   = "banana-bread"
-  vpc_cidr   = "10.123.0.0/16"
-  dns_zone   = "bread.alleaffengaffen.ch"
-  azs        = slice(data.aws_availability_zones.available.names, 0, 3)
+  vpc_name = "banana-bread"
+  vpc_cidr = "10.123.0.0/16"
+  dns_zone = "bread.alleaffengaffen.ch"
+  azs      = slice(data.aws_availability_zones.available.names, 0, 3)
 
   acme_mail = "banane@alleaffengaffen.ch"
   cluster_admins = [
