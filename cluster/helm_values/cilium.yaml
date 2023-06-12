@@ -69,6 +69,11 @@ hubble:
       requests:
         cpu: 100m
         memory: 64Mi
+    tolerations:
+      - operator: Equal
+        key: "beta.kubernetes.io/arch"
+        value: "arm64"
+        effect: "NoExecute"
   ui:
     enabled: true
     rollOutPods: true
@@ -101,6 +106,11 @@ hubble:
         requests:
           cpu: 100m
           memory: 24Mi
+    tolerations:
+      - operator: Equal
+        key: "beta.kubernetes.io/arch"
+        value: "arm64"
+        effect: "NoExecute"
 resources:
   requests:
     cpu: 300m

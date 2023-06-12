@@ -2,3 +2,9 @@ priorityClassName: system-cluster-critical
 containerPort: 10270
 hostNetwork:
   enabled: true
+# we support ARM!
+tolerations:
+  - operator: Equal
+    key: "beta.kubernetes.io/arch"
+    value: "arm64"
+    effect: "NoExecute"

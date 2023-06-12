@@ -5,6 +5,11 @@ region: ${region}
 vpcId: ${vpcID}
 priorityClassName: infra
 defaultSSLPolicy: "ELBSecurityPolicy-FS-1-2-Res-2020-10"
+tolerations:
+  - operator: Equal
+    key: "beta.kubernetes.io/arch"
+    value: "arm64"
+    effect: "NoExecute"
 
 hostNetwork: true # required due to cilium overlay
 dnsPolicy: "ClusterFirstWithHostNet"

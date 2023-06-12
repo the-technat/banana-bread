@@ -9,6 +9,12 @@ triggerLoopOnEvent: true
 policy: sync
 txtOwnerId: ${cluster_name}
 provider: aws
+# we support ARM!
+tolerations:
+  - operator: Equal
+    key: "beta.kubernetes.io/arch"
+    value: "arm64"
+    effect: "NoExecute"
 securityContext:
   runAsNonRoot: true
   readOnlyRootFilesystem: true

@@ -13,6 +13,13 @@ containerSecurityContext:
     drop:
       - ALL
 
+# we support ARM!
+tolerations:
+  - operator: Equal
+    key: "beta.kubernetes.io/arch"
+    value: "arm64"
+    effect: "NoExecute"
+
 expanderPriorities:
   10:
     - .*lions.*

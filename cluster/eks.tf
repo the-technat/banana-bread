@@ -8,10 +8,22 @@ module "eks" {
   cluster_addons = {
     coredns = {
       most_recent = true
+      configuration_values = jsonencode({
+        tolerations : [
+          {
+            key : "beta.kubernetes.io/arch",
+            operator : "Equal",
+            value : "arm64",
+            effect : "NoExecute"
+          }
+        ]
+      })
     }
     kube-proxy = {
       # if cilium is set, kube-proxy will be purged
       most_recent = true
+      configuration_values = jsonencode({
+      })
     }
     vpc-cni = {
       # if cilium is set, vpc-cni will be purged
@@ -70,7 +82,7 @@ module "eks" {
     capacity_type = "SPOT" # is it a lab or not?
     min_size      = 0
     max_size      = 5
-    desired_size  = 2
+    desired_size  = 1
 
     # Networking
     network_interfaces = [
@@ -113,7 +125,7 @@ module "eks" {
     minions = {
       name           = "minions"
       ami_type       = "AL2_ARM_64"
-      instance_types = ["t4g.medium", "c6g.large", "c6gd.large", "c6gn.large"]
+      instance_types = ["t4g.medium"]
       subnet_ids     = module.vpc.private_subnets
       ami_id         = data.aws_ami.eks_default_arm.image_id
       taints = [

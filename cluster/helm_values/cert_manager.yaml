@@ -5,6 +5,13 @@ podDnsPolicy: "ClusterFirstWithHostNet"
 
 installCRDs: true
 
+# we support ARM!
+tolerations:
+  - operator: Equals
+    key: "beta.kubernetes.io/arch"
+    value: "arm64"
+    effect: "NoExecute"
+
 resources:
   requests:
     cpu: 10m
@@ -34,7 +41,6 @@ webhook:
   securityContext:
     seccompProfile:
       type: RuntimeDefault
-
   containerSecurityContext:
     allowPrivilegeEscalation: false
     capabilities:
@@ -42,7 +48,6 @@ webhook:
         - ALL
     readOnlyRootFilesystem: true
     runAsNonRoot: true
-
   resources:
     requests:
       cpu: 10m
@@ -50,12 +55,16 @@ webhook:
     limits:
       cpu: 1
       memory: 1Gi
+  tolerations:
+    - operator: Equals
+      key: "beta.kubernetes.io/arch"
+      value: "arm64"
+      effect: "NoExecute"
 
 cainjector:
   securityContext:
     seccompProfile:
       type: RuntimeDefault
-
   containerSecurityContext:
     allowPrivilegeEscalation: false
     capabilities:
@@ -63,7 +72,6 @@ cainjector:
         - ALL
     readOnlyRootFilesystem: true
     runAsNonRoot: true
-
   resources:
     requests:
       cpu: 10m
@@ -71,12 +79,16 @@ cainjector:
     limits:
       cpu: 1
       memory: 1Gi
+  tolerations:
+    - operator: Equal
+      key: "beta.kubernetes.io/arch"
+      value: "arm64"
+      effect: "NoExecute"
 
 startupapicheck:
   securityContext:
     seccompProfile:
       type: RuntimeDefault
-
   containerSecurityContext:
     allowPrivilegeEscalation: false
     capabilities:
@@ -84,3 +96,8 @@ startupapicheck:
         - ALL
     readOnlyRootFilesystem: true
     runAsNonRoot: true
+  tolerations:
+    - operator: Equals
+      key: "beta.kubernetes.io/arch"
+      value: "arm64"
+      effect: "NoExecute"

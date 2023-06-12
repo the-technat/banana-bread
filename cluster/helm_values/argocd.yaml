@@ -9,6 +9,14 @@ configs:
   rbac:
     policy.default: role:readonly
 
+global:
+  # we support ARM!
+  tolerations:
+    - operator: Equal
+      key: "beta.kubernetes.io/arch"
+      value: "arm64"
+      effect: "NoExecute"
+
 server:
   replicas: 2
   pdb:

@@ -20,6 +20,7 @@ Always let some room for improvements:
 
 Some rules when deploying addons:
 - as idempotent as possible
+- tolerate ARM nodes when possible
 - use IRSA where possible
 - AWS addons are deployed into the `aws` namespace
 - Set securityContext explicitly whenever possible to the most restrictive
