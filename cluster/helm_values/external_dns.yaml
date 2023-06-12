@@ -9,3 +9,17 @@ triggerLoopOnEvent: true
 policy: sync
 txtOwnerId: ${cluster_name}
 provider: aws
+securityContext:
+  runAsNonRoot: true
+  readOnlyRootFilesystem: true
+  allowPrivilegeEscalation: false
+  capabilities:
+    drop:
+      - ALL
+resources:
+  limits:
+    cpu: 1
+    memory: 1Gi
+  requests:
+    cpu: 10m
+    memory: 50Mi

@@ -1,7 +1,7 @@
 global:
   priorityClassName: "infra"
 
-podDnsPolicy: 'ClusterFirstWithHostNet'
+podDnsPolicy: "ClusterFirstWithHostNet"
 
 installCRDs: true
 
@@ -14,7 +14,6 @@ resources:
     memory: 1Gi
 
 securityContext:
-  runAsNonRoot: true
   seccompProfile:
     type: RuntimeDefault
 
@@ -33,7 +32,6 @@ webhook:
     kind: WebhookConfiguration
     securePort: 10260
   securityContext:
-    runAsNonRoot: true
     seccompProfile:
       type: RuntimeDefault
 
@@ -55,7 +53,6 @@ webhook:
 
 cainjector:
   securityContext:
-    runAsNonRoot: true
     seccompProfile:
       type: RuntimeDefault
 
@@ -77,7 +74,6 @@ cainjector:
 
 startupapicheck:
   securityContext:
-    runAsNonRoot: true
     seccompProfile:
       type: RuntimeDefault
 

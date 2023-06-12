@@ -114,7 +114,7 @@ resource "helm_release" "argocd" {
   depends_on = [
     module.eks,
     helm_release.cilium,
-    helm_release.contour,
+    helm_release.ingress_nginx,
     kubernetes_priority_class_v1.infra
   ]
 }
