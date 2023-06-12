@@ -110,26 +110,25 @@ module "eks" {
   }
 
   eks_managed_node_groups = {
-    # minions = {
-    #   name           = "minions"
-    #   ami_type       = "AL2_ARM_64"
-    #   instance_types = ["t4g.medium", "c6g.large", "c6gd.large", "c6gn.large"]
-    #   subnet_ids     = module.vpc.private_subnets
-    #   ami_id         = data.aws_ami.eks_default_arm.image_id
-    #   desired_size   = 0 # by default we don't need arm64 nodes
-    #   taints = [
-    #     {
-    #       key    = "node.cilium.io/agent-not-ready"
-    #       value  = "true"
-    #       effect = "NO_EXECUTE"
-    #     },
-    #     {
-    #       key    = "beta.kubernetes.io/arch"
-    #       value  = "arm64"
-    #       effect = "NO_EXECUTE"
-    #     }
-    #   ]
-    # }
+    minions = {
+      name           = "minions"
+      ami_type       = "AL2_ARM_64"
+      instance_types = ["t4g.medium", "c6g.large", "c6gd.large", "c6gn.large"]
+      subnet_ids     = module.vpc.private_subnets
+      ami_id         = data.aws_ami.eks_default_arm.image_id
+      taints = [
+        {
+          key    = "node.cilium.io/agent-not-ready"
+          value  = "true"
+          effect = "NO_EXECUTE"
+        },
+        {
+          key    = "beta.kubernetes.io/arch"
+          value  = "arm64"
+          effect = "NO_EXECUTE"
+        }
+      ]
+    }
     lions = {
       name           = "lions"
       ami_type       = "AL2_x86_64"

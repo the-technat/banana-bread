@@ -13,11 +13,17 @@ containerSecurityContext:
     drop:
       - ALL
 
+expanderPriorities:
+  10:
+    - .*lions.*
+  50:
+    - .*minions.*
+
 extraArgs:
   leader-elect: true
+  expander: priority
   # leader-elect-resource-lock: endpoints
   # skip-nodes-with-local-storage: true
-  # expander: random
   # scale-down-enabled: true
   # balance-similar-node-groups: true
   # min-replica-count: 0

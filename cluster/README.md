@@ -14,15 +14,13 @@ Always let some room for improvements:
 
 - [ ] Deploy keda autoscaler
 - [ ] Deploy ebs-csi-controller
-- [ ] Deploy cluster-autoscaler
-- [ ] Configure cluster-autoscaler to prefer ARM64 nodes (and taint the other ones)
 - [ ] Configure IPv6 
 
 ## Addon Rules
 
 Some rules when deploying addons:
+- as idempotent as possible
 - use IRSA where possible
-- use optimistic versioning (e.g 1.11.x)
 - AWS addons are deployed into the `aws` namespace
 - Set securityContext explicitly whenever possible to the most restrictive
 - if it makes sense, set resource limits/requests
