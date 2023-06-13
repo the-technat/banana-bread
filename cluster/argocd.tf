@@ -103,6 +103,7 @@ resource "helm_release" "argocd" {
   values = [
     templatefile("${path.module}/helm_values/argocd.yaml", {
       dns_zone = local.dns_zone
+      class    = local.ingress_class
     })
   ]
 

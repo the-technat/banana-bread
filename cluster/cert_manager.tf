@@ -29,7 +29,7 @@ resource "helm_release" "cert_manager_extras" {
   values = [
     templatefile("${path.module}/helm_values/cert_manager_extras.yaml", {
       mail  = local.acme_mail
-      class = local.ingressClass
+      class = local.ingress_class
     })
   ]
 

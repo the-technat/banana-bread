@@ -11,6 +11,7 @@ resource "helm_release" "ingress_nginx" {
 
   values = [
     templatefile("${path.module}/helm_values/ingress_nginx.yaml", {
+      class = local.ingress_class
     })
   ]
 

@@ -44,7 +44,7 @@ resource "kubernetes_ingress_v1" "hubble_ingress" {
   }
 
   spec {
-    ingress_class_name = "nginx"
+    ingress_class_name = local.ingress_class
     rule {
       host = "hubble.${local.dns_zone}"
       http {

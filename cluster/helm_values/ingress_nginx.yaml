@@ -1,5 +1,9 @@
 controller:
   name: controller
+  ingressClass: ${class}
+  ingressClassResource:
+    name: ${class}
+    default: true
   service:
     annotations:
       service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
