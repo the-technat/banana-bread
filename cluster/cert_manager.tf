@@ -21,18 +21,19 @@ resource "helm_release" "cert_manager" {
   ]
 }
 
-resource "null_resource" "cert_manager_issuers" {
-  triggers = {
-    cert_manager = helm_release.cert_manager.metadata[0].values
-  }
+resource "helm_release" "cert_manager_extras" {
+  name      = "cert-manager-extras"
+  chart     = "${path.module}/charts/cert-manager-extras"
+  namespace = "cert-manager"
 
-  provisioner "local-exec" {
-    command = <<EOT
-      aws eks --region ${local.region} update-kubeconfig --name ${local.cluster_name}
-      curl -LO https://dl.k8s.io/release/v1.25.8/bin/linux/amd64/kubectl
-      chmod 0755 ./kubectl
-      ./kubectl -n cert-manager apply -f "${path.module}/helm_values/cert_manager_issuers.yaml"
-    EOT
-  }
+  values = [
+    templatefile("${path.module}/helm_values/cert_manager_extras.yaml", {
+      mail  = local.acme_mail
+      class = local.ingressClass
+    })
+  ]
+
+  depends_on = [
+    helm_release.cert_manager,
+  ]
 }
-

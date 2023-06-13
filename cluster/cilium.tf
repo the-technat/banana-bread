@@ -68,4 +68,8 @@ resource "kubernetes_ingress_v1" "hubble_ingress" {
       secret_name = "hubble-ui-tls"
     }
   }
+
+  depends_on = [
+    helm_release.ingress_nginx,
+  ]
 }
