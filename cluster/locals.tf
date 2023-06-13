@@ -8,7 +8,7 @@ locals {
   # Networking
   vpc_name      = "banana-bread"
   vpc_cidr      = "10.123.0.0/16"
-  dns_zone      = "bread.alleaffengaffen.ch"
+  dns_zone      = "aws.alleaffengaffen.ch"
   ingress_class = "nginx"
   azs           = slice(data.aws_availability_zones.available.names, 0, 3)
 

@@ -40,7 +40,12 @@ resource "null_resource" "purge_aws_networking" {
 
 resource "kubernetes_ingress_v1" "hubble_ingress" {
   metadata {
-    name = "hubble-ui"
+    name      = "hubble-ui"
+    namespace = "kube-system"
+    annotations = {
+      "cert-manager.io/cluster-issuer"           = "letsencrypt-prod-${local.ingress_class}"
+      "ingress.kubernetes.io/force-ssl-redirect" = "true"
+    }
   }
 
   spec {
