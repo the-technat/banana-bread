@@ -148,6 +148,17 @@ module "eks" {
       subnet_ids     = module.vpc.private_subnets
       ami_id         = data.aws_ami.eks_default.image_id
     }
+    cheeseburger = {
+      ami_type = "BOTTLEROCKET_x86_64"
+      platform = "bottlerocket"
+
+      # This will get added to what AWS provides
+      bootstrap_extra_args = <<-EOT
+        # extra args added
+        [settings.kernel]
+        lockdown = "integrity"
+      EOT
+    }
   }
 
   tags = local.tags
