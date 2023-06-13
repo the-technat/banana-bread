@@ -17,6 +17,11 @@ locals {
   cluster_admins = [
     {
       userarn  = "arn:aws:iam::${local.account_id}:root"
+      username = "root"
+      groups   = ["system:masters"]
+    },
+    {
+      userarn  = "arn:aws:iam::${local.account_id}:user/banana"
       username = "banana"
       groups   = ["system:masters"]
     },

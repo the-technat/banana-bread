@@ -153,8 +153,8 @@ module "eks" {
   }
 
   tags = local.tags
-}
 
+}
 
 # use pre-build images by AWS
 data "aws_ami" "eks_default" {
