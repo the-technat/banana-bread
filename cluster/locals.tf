@@ -16,13 +16,8 @@ locals {
   acme_mail = "banane@alleaffengaffen.ch"
   cluster_admins = [
     {
-      userarn  = "arn:aws:iam::${local.account_id}:user/banana"
+      userarn  = "arn:aws:iam::${local.account_id}:root"
       username = "banana"
-      groups   = ["system:masters"]
-    },
-    {
-      userarn  = "arn:aws:iam::${local.account_id}:user/nuker"
-      username = "nuker"
       groups   = ["system:masters"]
     },
   ]
