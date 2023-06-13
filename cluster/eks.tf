@@ -22,8 +22,6 @@ module "eks" {
     kube-proxy = {
       # if cilium is set, kube-proxy will be purged
       most_recent = true
-      configuration_values = jsonencode({
-      })
     }
     vpc-cni = {
       # if cilium is set, vpc-cni will be purged
@@ -54,7 +52,6 @@ module "eks" {
   manage_aws_auth_configmap = true
   enable_irsa               = true
   aws_auth_users            = local.cluster_admins
-  kms_key_owners            = local.cluster_admin_arns # required for us to delete the resources created by another account
 
   // settings in this block apply to all nodes groups
   eks_managed_node_group_defaults = {
@@ -79,10 +76,11 @@ module "eks" {
     force_update_version = true # after 15min of unsuccessful draining, pods are force-killed
 
     # Compute
-    capacity_type = "SPOT" # is it a lab or not?
-    min_size      = 0
-    max_size      = 5
-    desired_size  = 1
+    instance_types = ["t3a.medium", "t3.medium", "t2.medium"]
+    capacity_type  = "SPOT" # is it a lab or not?
+    min_size       = 0
+    max_size       = 5
+    desired_size   = 1
 
     # Networking
     network_interfaces = [
@@ -142,22 +140,15 @@ module "eks" {
       ]
     }
     lions = {
-      name           = "lions"
-      ami_type       = "AL2_x86_64"
-      instance_types = ["t3a.medium", "t3.medium", "t2.medium"]
-      subnet_ids     = module.vpc.private_subnets
-      ami_id         = data.aws_ami.eks_default.image_id
+      name       = "lions"
+      ami_type   = "AL2_x86_64"
+      subnet_ids = module.vpc.private_subnets
+      ami_id     = data.aws_ami.eks_default.image_id
     }
     cheeseburger = {
-      ami_type = "BOTTLEROCKET_x86_64"
-      platform = "bottlerocket"
-
-      # This will get added to what AWS provides
-      bootstrap_extra_args = <<-EOT
-        # extra args added
-        [settings.kernel]
-        lockdown = "integrity"
-      EOT
+      ami_type     = "BOTTLEROCKET_x86_64"
+      platform     = "bottlerocket"
+      desired_size = 0
     }
   }
 
@@ -193,8 +184,7 @@ module "cloudwatch_kms_key" {
   deletion_window_in_days = 7
 
   # Policy
-  key_administrators = concat([data.aws_caller_identity.current.arn], local.cluster_admin_arns)
-  key_owners         = concat([data.aws_caller_identity.current.arn], local.cluster_admin_arns)
+  key_administrators = [data.aws_caller_identity.current.arn]
   key_statements = [
     {
       sid = "CloudWatchLogs"
@@ -241,8 +231,7 @@ module "ebs_kms_key" {
   deletion_window_in_days = 7
 
   # Policy
-  key_administrators = concat([data.aws_caller_identity.current.arn], local.cluster_admin_arns)
-  key_owners         = concat([data.aws_caller_identity.current.arn], local.cluster_admin_arns)
+  key_administrators = [data.aws_caller_identity.current.arn]
   key_service_roles_for_autoscaling = [
     # required for the ASG to manage encrypted volumes for nodes
     "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling",

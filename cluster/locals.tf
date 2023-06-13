@@ -25,11 +25,6 @@ locals {
       username = "nuker"
       groups   = ["system:masters"]
     },
-    {
-      userarn  = "arn:aws:iam::732912165649:user/m2banana"
-      username = "m2banana"
-      groups   = ["system:masters"]
-    },
   ]
   cluster_admin_arns = formatlist("%s", local.cluster_admins[*].userarn)
 
