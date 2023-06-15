@@ -22,6 +22,22 @@ resource "helm_release" "cilium" {
   ]
 }
 
+resource "null_resource" "purge_kube_proxy" {
+  triggers = {
+    eks = module.eks.cluster_endpoint # only do this when the cluster changes (e.g create/recreate)
+  }
+
+  provisioner "local-exec" {
+    command = <<EOT
+      aws eks --region ${local.region} update-kubeconfig --name ${local.cluster_name}
+      curl -LO https://dl.k8s.io/release/v1.27.0/bin/linux/amd64/kubectl
+      chmod 0755 ./kubectl
+      ./kubectl -n kube-system delete daemonset kube-proxy --ignore-not-found 
+    EOT
+  }
+}
+
+
 resource "null_resource" "purge_aws_networking" {
   triggers = {
     eks = module.eks.cluster_endpoint # only do this when the cluster changes (e.g create/recreate)
@@ -30,7 +46,7 @@ resource "null_resource" "purge_aws_networking" {
   provisioner "local-exec" {
     command = <<EOT
       aws eks --region ${local.region} update-kubeconfig --name ${local.cluster_name}
-      curl -LO https://dl.k8s.io/release/v1.25.8/bin/linux/amd64/kubectl
+      curl -LO https://dl.k8s.io/release/v1.27.0/bin/linux/amd64/kubectl
       chmod 0755 ./kubectl
       ./kubectl -n kube-system delete daemonset aws-node --ignore-not-found
     EOT
@@ -74,6 +90,6 @@ resource "kubernetes_ingress_v1" "hubble_ingress" {
   }
 
   depends_on = [
-    helm_release.ingress_nginx,
+    helm_release.cilium,
   ]
 }

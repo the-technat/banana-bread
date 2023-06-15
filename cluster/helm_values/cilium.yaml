@@ -15,20 +15,21 @@
 
 ## ENI Integration values
 # https://docs.cilium.io/en/v1.13/installation/k8s-install-helm/#install-cilium -> eks
-eni:
-  enabled: true
-ipam:
-  mode: eni
-egressMasqueradeInterfaces: eth0
-tunnel: disabled
-bpf:
-  hostLegacyRouting: true
+# eni:
+#   enabled: true
+# ipam:
+#   mode: eni
+# egressMasqueradeInterfaces: eth0
+# tunnel: disabled
+# bpf:
+#   hostLegacyRouting: true
 
 # kube-proxy replacement
 # also requires ./kubectl -n kube-system delete daemonset kube-proxy --ignore-not-found in purge_aws_networking
-kubeProxyReplacement: disabled
-# k8sServiceHost: ${cluster_endpoint}
-# k8sServicePort: "443"
+# cilium ingress gateway requires either partial or strict for the replacement
+kubeProxyReplacement: strict
+k8sServiceHost: ${cluster_endpoint}
+k8sServicePort: "443"
 
 ## General values
 cluster:
@@ -41,7 +42,15 @@ containerRuntime:
   integration: containerd
   socketPath: /var/run/containerd/containerd.sock
 
-## Resources and security-contexts
+ingressController:
+  enabled: true
+  loadBalancerMode: shared
+  service:
+    annotations:
+      service.beta.kubernetes.io/aws-load-balancer-type: "nlb"
+      service.beta.kubernetes.io/aws-load-balancer-scheme: "internet-facing"
+
+## Resources and security-contexts + hubble ui configs
 operator:
   replicas: 1
   rollOutPods: true
