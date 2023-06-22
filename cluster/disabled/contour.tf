@@ -2,7 +2,6 @@
 # Contour
 ##########
 resource "helm_release" "contour" {
-  count = 0 # currently ingress-nginx is used as hubble has some problems with contour
   name             = "contour"
   repository       = "https://charts.bitnami.com/bitnami"
   chart            = "contour"

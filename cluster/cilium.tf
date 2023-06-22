@@ -54,6 +54,7 @@ resource "null_resource" "purge_aws_networking" {
 }
 
 resource "kubernetes_ingress_v1" "hubble_ingress" {
+  count = 0 # https://github.com/cilium/hubble-ui/issues/452
   metadata {
     name      = "hubble-ui"
     namespace = "kube-system"

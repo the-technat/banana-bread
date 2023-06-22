@@ -1,0 +1,296 @@
+replicaCount: 1
+
+securityContext:
+  capabilities:
+    drop:
+      - ALL
+  readOnlyRootFilesystem: true
+  runAsNonRoot: true
+  runAsUser: 1000
+
+ingress:
+  enabled: true
+  className: "contour"
+  annotations:
+    kubernetes.io/tls-acme: "true"
+  tls:
+    - secretName: paralus-tls
+      hosts:
+        - paralus.aws.alleaffengaffen.ch
+
+fqdn:
+  domain: paralus.aws.alleaffengaffen.ch
+  hostname: "console"
+  coreConnectorSubdomain: "*.core-connector"
+  userSubdomain: "*.user"
+
+paralus:
+  initialize:
+    # -- Partner name
+    partner: "Paralus"
+    # -- Partner description
+    partnerDesc: "Default Partner"
+    # -- Partner host
+    partnerHost: "paralus.local"
+    # -- Organization name
+    org: "ParalusOrg"
+    # -- Organization description
+    orgDesc: "Default Organization"
+    # -- Admin email address
+    adminEmail: "admin@paralus.local"
+    # -- Admin first name
+    adminFirstName: "Admin"
+    # -- Admin last name
+    adminLastName: "User"
+
+deploy:
+  kratos:
+    # -- Kratos instance is auto deployed and managed by Helm release
+    # when true.
+    enable: true
+    # -- SMTP connection URI that used by auto-deployed kratos for
+    # sending mails for example, account recovery etc.
+    smtpConnectionURI: "smtps://test:test@mypost:1025/?skip_ssl_verify=true"
+    # -- Kratos public address. Required when `deploy.kratos.enable`
+    # is unset
+    publicAddr: ""
+    # -- Kratos admin address. Required when `deploy.kratos.enable` is
+    # unset
+    adminAddr: ""
+
+  postgresql:
+    # -- Postgresql db is auto deployed and managed by Helm release
+    # when true. (It is recommended to manage your own DB instance
+    # separately or use DB services like Amazon RDS in production)
+    enable: false
+    # -- Postgresql DSN for example, "postgres://user:password@host:5432/db". Required
+    # when `deploy.postgresql.enable` is unset and individual components are not specified.
+    # Overrides individual components (address, username, password, database)
+    dsn: ""
+    # -- Postgresql address for example, "localhost:5432". Required
+    # when `deploy.postgresql.enable` is unset and dsn is not specified.
+    address: ""
+    # -- Postgresql username. Required when `deploy.postgresql.enable`
+    # is unset and dsn is not specified.
+    username: ""
+    # -- Postgresql password. Required when `deploy.postgresql.enable`
+    # is unset and dsn is not specified.
+    password: ""
+    # -- Postgresql database name. Required when
+    # `deploy.postgresql.enable` is unset and dsn is not specified.
+    database: ""
+
+  contour:
+    enable: false
+
+# -- the chart will overwrite some values of kratos subchart.
+# @default -- kratos subchart overwrite
+kratos:
+  secret:
+    enabled: false
+    nameOverride: "kratos"
+  kratos:
+    development: false
+    config:
+      version: v0.11.0
+      courier:
+        smtp:
+          # As per Kratos configuration it should string, but Kratos
+          # helm chart is using it only as a flag to set
+          # COURIER_SMTP_CONNECTION_URI variable. Actual value is
+          # taken from kratos Secret.
+          connection_uri: true
+      serve:
+        public:
+          cors:
+            enabled: true
+            allowed_headers:
+              - Authorization
+              - Cookie
+              - Content-Type
+              - X-Session-Token
+            exposed_headers:
+              - Content-Type
+              - Set-Cookie
+        admin:
+          port: 4434
+      selfservice:
+        methods:
+          password:
+            enabled: true
+          oidc:
+            enabled: true
+        flows:
+          settings:
+            privileged_session_max_age: 15m
+          recovery:
+            enabled: true
+          registration:
+            lifespan: 10m
+            after:
+              password:
+                hooks:
+                  - hook: session
+              oidc:
+                hooks:
+                  - hook: session
+      identity:
+        default_schema_id: default
+        schemas:
+          - id: default
+            url: file:///etc/config/identity.schema.v1.json
+
+    identitySchemas:
+      "identity.schema.v1.json": |
+        {
+          "$id": "https://schemas.paralus.io/email-password/identity.schema.v1.json",
+          "$schema": "http://json-schema.org/draft-07/schema#",
+          "title": "Person",
+          "type": "object",
+          "properties": {
+            "traits": {
+              "type": "object",
+              "properties": {
+                "first_name": {
+                  "title": "First name",
+                  "type": "string",
+                  "pattern": "^.*$"
+                },
+                "last_name": {
+                  "title": "Last name",
+                  "type": "string",
+                  "pattern": "^.*$"
+                },
+                "email": {
+                  "type": "string",
+                  "format": "email",
+                  "title": "E-Mail",
+                  "minLength": 3,
+                  "ory.sh/kratos": {
+                    "credentials": {
+                      "password": {
+                        "identifier": true
+                      }
+                    },
+                    "verification": {
+                      "via": "email"
+                    },
+                    "recovery": {
+                      "via": "email"
+                    }
+                  }
+                },
+                "idp_groups": {
+                  "type": "array",
+                  "title": "IDP groups",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "required": [
+                "email"
+              ],
+              "additionalProperties": false
+            }
+          }
+        }
+
+  deployment:
+    extraEnv:
+      - name: SERVE_PUBLIC_BASE_URL
+        valueFrom:
+          configMapKeyRef:
+            name: kratos-config
+            key: serve_public_base_url
+      - name: SELFSERVICE_DEFAULT_BROWSER_RETURN_URL
+        valueFrom:
+          configMapKeyRef:
+            name: kratos-config
+            key: default_browser_return_url
+      - name: SELFSERVICE_ALLOWED_RETURN_URLS
+        valueFrom:
+          configMapKeyRef:
+            name: kratos-config
+            key: default_browser_return_url
+      - name: SELFSERVICE_FLOWS_SETTINGS_UI_URL
+        valueFrom:
+          configMapKeyRef:
+            name: kratos-config
+            key: selfservice_flows_settings_ui_url
+      - name: SELFSERVICE_FLOWS_RECOVERY_UI_URL
+        valueFrom:
+          configMapKeyRef:
+            name: kratos-config
+            key: selfservice_flows_recovery_ui_url
+      - name: SELFSERVICE_FLOWS_REGISTRATION_UI_URL
+        valueFrom:
+          configMapKeyRef:
+            name: kratos-config
+            key: selfservice_flows_registration_ui_url
+      - name: SELFSERVICE_FLOWS_ERROR_UI_URL
+        valueFrom:
+          configMapKeyRef:
+            name: kratos-config
+            key: selfservice_flows_error_ui_url
+
+    # OIDC Provider config synchronizer as sidecar to Kratos
+    extraContainers: |
+      - name: synchronizer
+        image: "paralusio/kratos-synchronizer:v0.2.3"
+        volumeMounts:
+          - name: other-configs
+            mountPath: /etc/kratos
+        env:
+          - name: DSN
+            valueFrom:
+              secretKeyRef:
+                name: paralus-db
+                key: DSN
+          - name: KRATOS_PROVIDER_CFG
+            value: "/etc/kratos/providers.yaml"
+    extraArgs:
+      - --config
+      - /etc/kratos/providers.yaml
+      # this loads the extra config to override hook configuration
+      - --config
+      - /etc/kratos/hooks/kratos-config-hooks.yaml
+    extraVolumes:
+      - name: other-configs
+        emptyDir: {}
+      # loading volume from kratos config hook configmap
+      - name: kratos-config-hooks
+        configMap:
+          name: kratos-config-hooks
+          defaultMode: 420
+    extraVolumeMounts:
+      - name: other-configs
+        mountPath: /etc/kratos
+      # content of the hook config map data
+      - name: kratos-config-hooks
+        mountPath: /etc/kratos/hooks/kratos-config-hooks.yaml
+        subPath: kratos-config-hooks.yaml
+    extraInitContainers: |
+      - name: create-file
+        image: "busybox:latest"
+        command: ['sh', '-c', 'touch /etc/kratos/providers.yaml']
+        volumeMounts:
+          - name: other-configs
+            mountPath: /etc/kratos
+      - name: create-login-hook-jsonnetfile
+        image: "busybox:latest"
+        command: ['sh', '-c', 'echo "function(ctx) { user_id: ctx.identity.id }" > /etc/kratos/body.jsonnet']
+        volumeMounts:
+          - name: other-configs
+            mountPath: /etc/kratos
+
+epostgresql:
+  dbAddr: ""
+  # -- When `deploy.postgresql.enable` is true postgres instance is
+  # created with this credentials.
+  auth:
+    existingSecret: postgresql
+    enablePostgresUser: false
+    username: "admindbuser"
+    password: "admindbpassword"
+    database: "admindb"
