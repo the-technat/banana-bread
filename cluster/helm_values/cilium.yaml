@@ -43,7 +43,7 @@ containerRuntime:
   socketPath: /var/run/containerd/containerd.sock
 
 ingressController:
-  enabled: false
+  enabled: true
   loadBalancerMode: shared
   service:
     annotations:
