@@ -9,7 +9,7 @@ contour:
       memory: 128Mi
   manageCRDs: true
   ingressClass:
-    name: "contour"
+    name: ${className}
     create: true
     default: true
 

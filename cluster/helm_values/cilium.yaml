@@ -42,8 +42,9 @@ containerRuntime:
   integration: containerd
   socketPath: /var/run/containerd/containerd.sock
 
+# we are affected by https://github.com/cilium/cilium/issues/22340
 ingressController:
-  enabled: true
+  enabled: false
   loadBalancerMode: shared
   service:
     annotations:
