@@ -9,17 +9,12 @@ locals {
   vpc_name      = "banana-bread"
   vpc_cidr      = "10.123.0.0/16"
   dns_zone      = "aws.alleaffengaffen.ch"
-  ingress_class = "cilium"
+  ingress_class = "nginx"
   azs           = slice(data.aws_availability_zones.available.names, 0, 3)
 
   # IAM
   acme_mail = "banane@alleaffengaffen.ch"
   cluster_admins = [
-    {
-      userarn  = "arn:aws:iam::${local.account_id}:root"
-      username = "root"
-      groups   = ["system:masters"]
-    },
     {
       userarn = "arn:aws:iam::${local.account_id}:user/cucumber"
       username = "cucumber"
