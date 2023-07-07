@@ -22,7 +22,7 @@ tolerations:
 
 expanderPriorities:
   10:
-    - .*lions.*
+    - .*donkeys.*
   50:
     - .*minions.*
 

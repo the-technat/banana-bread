@@ -24,10 +24,10 @@ Some specialities on this setup:
 
 - Only the EKS managed SG is used for Control plane + Nodes
 - Everything is encrypted using Customer-managed KMS keys
-- Cilium in overlay mode with kube-proxy replacemement is used 
-  - sometimes Cilium is also used in ENI mode or cni-chaining, depending on what I want to test
+- Cilium in ENI mode with kube-proxy replacemement is used 
+  - sometimes Cilium is also used in overlay mode or cni-chaining, depending on what I want to test
 - On cluster-level everything is designed fully-HA except the NAT gateway (only one for all AZs)
-  - Addons aren't HA though
+  - Addons aren't HA though (but most could be made HA easily by increasing the number of replicas)
 - no IPv6 (just confuses us when testing)
 
 ### Addons

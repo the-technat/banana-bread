@@ -41,6 +41,9 @@ module "eks" {
   cloudwatch_log_group_retention_in_days = 30
   cloudwatch_log_group_kms_key_id        = module.cloudwatch_kms_key.key_arn
 
+  # KMS
+  kms_key_owners = [aws_iam_role.cluster_admin.arn, data.aws_caller_identity.current.arn, "arn:aws:iam::${local.account_id}:user/nuker"]
+
   # Networking
   vpc_id                         = module.vpc.vpc_id
   subnet_ids                     = module.vpc.private_subnets
@@ -49,8 +52,8 @@ module "eks" {
   create_node_security_group     = false # we just use the eks-managed SG
 
   # IAM
-  manage_aws_auth_configmap = true
   enable_irsa               = true
+  manage_aws_auth_configmap = true
   aws_auth_roles = [
     {
       rolearn  = aws_iam_role.cluster_admin.arn
@@ -68,6 +71,11 @@ module "eks" {
         key    = "node.cilium.io/agent-not-ready"
         value  = "true"
         effect = "NO_EXECUTE"
+      },
+      {
+        key    = "beta.kubernetes.io/arch"
+        value  = "arm64"
+        effect = "NO_EXECUTE"
       }
     ]
     metadata_options = {
@@ -82,7 +90,9 @@ module "eks" {
     force_update_version = true # after 15min of unsuccessful draining, pods are force-killed
 
     # Compute
-    instance_types = ["t3a.medium", "t3.medium", "t2.medium"]
+    ami_type       = "AL2_ARM_64"
+    ami_id         = data.aws_ami.eks_default_arm.image_id
+    instance_types = ["t4g.medium", "c6g.large", "c6gd.large", "c6gn.large"]
     capacity_type  = "SPOT" # is it a lab or not?
     min_size       = 0
     max_size       = 5
@@ -113,10 +123,10 @@ module "eks" {
     }
 
     # IAM
+    iam_role_attach_cni_policy = true
     iam_role_additional_policies = {
       AmazonSSMManagedInstanceCore = "arn:aws:iam::aws:policy/AmazonSSMManagedInstanceCore",
     }
-    iam_role_attach_cni_policy = true
 
     // required since we specify the AMI to use
     // otherwise the nodes don't join
@@ -126,38 +136,69 @@ module "eks" {
   }
 
   eks_managed_node_groups = {
-    minions = {
-      name           = "minions"
-      ami_type       = "AL2_ARM_64"
-      instance_types = ["t4g.medium"]
-      subnet_ids     = module.vpc.private_subnets
-      # ami_id         = data.aws_ami.eks_default_arm.image_id
-      ami_id = "ami-0fa734c561e1dd203"
+
+    minions-a = {
+      name       = "minions-${local.azs[0]}"
+      subnet_ids = [module.vpc.private_subnets[0]]
+    }
+    minions-b = {
+      name       = "minions-${local.azs[1]}"
+      subnet_ids = [module.vpc.private_subnets[1]]
+    }
+    minions-c = {
+      name       = "minions-${local.azs[2]}"
+      subnet_ids = [module.vpc.private_subnets[2]]
+    }
+    donkeys-a = {
+      name           = "donkeys-${local.azs[0]}"
+      subnet_ids     = [module.vpc.private_subnets[0]]
+      ami_type       = "AL2_x86_64"
+      ami_id         = data.aws_ami.eks_default.image_id
+      instance_types = ["t3a.medium", "t3.medium", "t2.medium"]
+      desired_size   = 0 # how needs AMD64?
       taints = [
         {
           key    = "node.cilium.io/agent-not-ready"
           value  = "true"
           effect = "NO_EXECUTE"
-        },
+        }
+      ]
+    }
+    donkeys-b = {
+      name           = "donkeys-${local.azs[1]}"
+      subnet_ids     = [module.vpc.private_subnets[1]]
+      ami_type       = "AL2_x86_64"
+      ami_id         = data.aws_ami.eks_default.image_id
+      instance_types = ["t3a.medium", "t3.medium", "t2.medium"]
+      desired_size   = 0 # how needs AMD64?
+      taints = [
         {
-          key    = "beta.kubernetes.io/arch"
-          value  = "arm64"
+          key    = "node.cilium.io/agent-not-ready"
+          value  = "true"
           effect = "NO_EXECUTE"
         }
       ]
     }
-    lions = {
-      name       = "lions"
-      ami_type   = "AL2_x86_64"
-      subnet_ids = module.vpc.private_subnets
-      # ami_id     = data.aws_ami.eks_default.image_id
-      ami_id = "ami-039176101b17dc9e1"
+    donkeys-c = {
+      name           = "donkeys-${local.azs[2]}"
+      subnet_ids     = [module.vpc.private_subnets[2]]
+      ami_type       = "AL2_x86_64"
+      ami_id         = data.aws_ami.eks_default.image_id
+      instance_types = ["t3a.medium", "t3.medium", "t2.medium"]
+      desired_size   = 0 # how needs AMD64?
+      taints = [
+        {
+          key    = "node.cilium.io/agent-not-ready"
+          value  = "true"
+          effect = "NO_EXECUTE"
+        }
+      ]
     }
-    cheeseburger = {
-      ami_type     = "BOTTLEROCKET_x86_64"
-      platform     = "bottlerocket"
-      desired_size = 0
-    }
+    # cheeseburger = {
+    #   ami_type     = "BOTTLEROCKET_x86_64"
+    #   platform     = "bottlerocket"
+    #   desired_size = 0
+    # }
   }
 
   tags = local.tags
@@ -173,7 +214,6 @@ data "aws_ami" "eks_default" {
     values = ["amazon-eks-node-${local.cluster_version}-v*"]
   }
 }
-
 data "aws_ami" "eks_default_arm" {
   most_recent = true
   owners      = ["amazon"]
