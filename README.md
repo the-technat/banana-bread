@@ -57,6 +57,10 @@ Here are the steps required to get this deployed:
 6. Adjust `cluster/locals.tf` according your preferences / environment
 6. Start your first run (won't be done automatically)
 
+#### IAM Workflow
+
+There's an IAM role called `EKSClusterAdmin` that is allowed to do anything in the cluster, manage all related AWS resources and so on. To assume this role, add your principal to the `cluster_admins` list in [locals.tf](cluster/locals.tf).
+
 #### Destruction
 
 I'm not a fan of keeping homelabs running all the time. Mainly because of cost. I'll only need it when I want to tinker a bit. So I've wrote a simple Github Actions pipeline that destroyes my entire homelab on a schedule.
