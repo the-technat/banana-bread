@@ -155,7 +155,7 @@ module "eks" {
       ami_type       = "AL2_x86_64"
       ami_id         = data.aws_ami.eks_default.image_id
       instance_types = ["t3a.medium", "t3.medium", "t2.medium"]
-      desired_size   = 0 # how needs AMD64?
+      desired_size   = 0 # who needs AMD64?
       taints = [
         {
           key    = "node.cilium.io/agent-not-ready"
@@ -170,7 +170,7 @@ module "eks" {
       ami_type       = "AL2_x86_64"
       ami_id         = data.aws_ami.eks_default.image_id
       instance_types = ["t3a.medium", "t3.medium", "t2.medium"]
-      desired_size   = 0 # how needs AMD64?
+      desired_size   = 0 # who needs AMD64?
       taints = [
         {
           key    = "node.cilium.io/agent-not-ready"
@@ -185,7 +185,7 @@ module "eks" {
       ami_type       = "AL2_x86_64"
       ami_id         = data.aws_ami.eks_default.image_id
       instance_types = ["t3a.medium", "t3.medium", "t2.medium"]
-      desired_size   = 0 # how needs AMD64?
+      desired_size   = 0 # who needs AMD64?
       taints = [
         {
           key    = "node.cilium.io/agent-not-ready"
