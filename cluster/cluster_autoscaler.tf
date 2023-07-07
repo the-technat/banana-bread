@@ -43,4 +43,70 @@ module "aws_cluster_autoscaler_irsa" {
   tags = local.tags
 }
 
+##########
+# scale-in preventer
+# See ./scale-in-preventer/README.md for more informations
+##########
+resource "aws_iam_role" "scale_in_preventer" {
+  name = "scale-in-preventer"
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = "sts:AssumeRole"
+        Effect = "Allow"
+        Sid    = ""
+        Principal = {
+          Service = "lambda.amazonaws.com"
+        }
+      },
+    ]
+  })
 
+  tags = local.tags
+}
+
+resource "aws_iam_policy" "scale_in_preventer" {
+  name        = "scale-in-preventer"
+  path        = "/"
+  description = "Policy for aws lamda scale-in-preventer"
+
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Action = [
+          "logs:CreateLogGroup",
+          "logs:CreateLogStream",
+          "logs:PutLogEvents",
+        ],
+        Effect   = "Allow"
+        Resource = "arn:aws:logs:${local.region}:${local.account_id}:*"
+      },
+    ]
+  })
+
+  tags = local.tags
+}
+
+resource "aws_iam_role_policy_attachment" "sclae_in_preventer" {
+  role       = aws_iam_role.scale_in_preventer.name
+  policy_arn = aws_iam_policy.scale_in_preventer.arn
+}
+
+data "archive_file" "code" {
+  type        = "zip"
+  source_dir  = "${path.module}/scale-in-preventer/"
+  output_path = "${path.module}/scale-in-preventer.zip"
+}
+
+resource "aws_lambda_function" "scale_in_preventer" {
+  filename      = "${path.module}/scale-in-preventer.zip"
+  function_name = "scale-in-preventer"
+  role          = aws_iam_role.scale_in_preventer.arn
+  handler       = "main"
+  timeout       = "60"
+  runtime       = "go1.x"
+
+  tags = local.tags
+}
