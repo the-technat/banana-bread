@@ -144,16 +144,10 @@ data "aws_iam_policy_document" "argocd" {
     sid    = "EnableAdminsToReadSecret"
     effect = "Allow"
 
-    # the users directly can also get the secret
-    principals {
-      type        = "AWS"
-      identifiers = local.cluster_admin_arns
-    }
-
     # the assumed role can get the secret
     principals {
       type        = "AWS"
-      identifiers = [aws_iam_role.cluster_admin_role.arn]
+      identifiers = [aws_iam_role.cluster_admin.arn]
     }
 
     actions   = ["secretsmanager:GetSecretValue"]

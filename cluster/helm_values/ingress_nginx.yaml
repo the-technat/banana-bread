@@ -14,5 +14,3 @@ controller:
       key: "beta.kubernetes.io/arch"
       value: "arm64"
       effect: "NoExecute"
-  dnsPolicy: ClusterFirstWithHostNet
-  hostNetwork: true # overlay network on EKS

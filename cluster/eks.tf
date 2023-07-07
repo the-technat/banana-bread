@@ -51,7 +51,13 @@ module "eks" {
   # IAM
   manage_aws_auth_configmap = true
   enable_irsa               = true
-  aws_auth_users            = local.cluster_admins
+  aws_auth_roles = [
+    {
+      rolearn  = aws_iam_role.cluster_admin.arn
+      username = "EKSClusterAdminPolicy"
+      groups   = ["system:masters"]
+    },
+  ]
 
   // settings in this block apply to all nodes groups
   eks_managed_node_group_defaults = {
@@ -184,7 +190,7 @@ module "cloudwatch_kms_key" {
   deletion_window_in_days = 7
 
   # Policy
-  key_administrators = [data.aws_caller_identity.current.arn]
+  key_owners = [aws_iam_role.cluster_admin.arn, data.aws_caller_identity.current.arn, "arn:aws:iam::${local.account_id}:user/nuker"]
   key_statements = [
     {
       sid = "CloudWatchLogs"
@@ -231,7 +237,7 @@ module "ebs_kms_key" {
   deletion_window_in_days = 7
 
   # Policy
-  key_administrators = [data.aws_caller_identity.current.arn]
+  key_owners = [aws_iam_role.cluster_admin.arn, data.aws_caller_identity.current.arn, "arn:aws:iam::${local.account_id}:user/nuker"]
   key_service_roles_for_autoscaling = [
     # required for the ASG to manage encrypted volumes for nodes
     "arn:aws:iam::${data.aws_caller_identity.current.account_id}:role/aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling",

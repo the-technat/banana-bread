@@ -1,4 +1,4 @@
-resource "aws_iam_policy" "cluster_admin_policy" {
+resource "aws_iam_policy" "cluster_admin" {
   name        = "EKSClusterAdminPolicy"
   path        = "/"
   description = "All permissions an EKS cluster admin needs"
@@ -23,17 +23,17 @@ resource "aws_iam_policy" "cluster_admin_policy" {
   })
 }
 
-resource "aws_iam_role_policy_attachment" "cluster_admin_policy_attachement" {
-  role       = aws_iam_role.cluster_admin_role.name
-  policy_arn = aws_iam_policy.cluster_admin_policy.arn
+resource "aws_iam_role_policy_attachment" "cluster_admin" {
+  role       = aws_iam_role.cluster_admin.name
+  policy_arn = aws_iam_policy.cluster_admin.arn
 }
 
-resource "aws_iam_role" "cluster_admin_role" {
+resource "aws_iam_role" "cluster_admin" {
   name               = "EKSClusterAdmin"
-  assume_role_policy = data.aws_iam_policy_document.cluster_admin_assume_policy.json
+  assume_role_policy = data.aws_iam_policy_document.cluster_admin_assume.json
 }
 
-data "aws_iam_policy_document" "cluster_admin_assume_policy" {
+data "aws_iam_policy_document" "cluster_admin_assume" {
   statement {
     actions = ["sts:AssumeRole"]
     dynamic "principals" {
