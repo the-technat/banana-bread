@@ -131,7 +131,8 @@ module "eks" {
       ami_type       = "AL2_ARM_64"
       instance_types = ["t4g.medium"]
       subnet_ids     = module.vpc.private_subnets
-      ami_id         = data.aws_ami.eks_default_arm.image_id
+      # ami_id         = data.aws_ami.eks_default_arm.image_id
+      ami_id = "ami-0fa734c561e1dd203"
       taints = [
         {
           key    = "node.cilium.io/agent-not-ready"
@@ -149,7 +150,8 @@ module "eks" {
       name       = "lions"
       ami_type   = "AL2_x86_64"
       subnet_ids = module.vpc.private_subnets
-      ami_id     = data.aws_ami.eks_default.image_id
+      # ami_id     = data.aws_ami.eks_default.image_id
+      ami_id = "ami-039176101b17dc9e1"
     }
     cheeseburger = {
       ami_type     = "BOTTLEROCKET_x86_64"
