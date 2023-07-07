@@ -29,8 +29,11 @@ expanderPriorities:
 extraArgs:
   leader-elect: true
   expander: priority
+  skip-nodes-with-system-pods: false
+  skip-nodes-with-local-storage: false
+  scale-down-delay-after-add: 5m
+  scale-down-unneeded-time: 1m
   # leader-elect-resource-lock: endpoints
-  # skip-nodes-with-local-storage: true
   # scale-down-enabled: true
   # balance-similar-node-groups: true
   # min-replica-count: 0
@@ -38,11 +41,8 @@ extraArgs:
   # scale-down-non-empty-candidates-count: 30
   # max-node-provision-time: 15m0s
   # scan-interval: 10s
-  scale-down-delay-after-add: 1m
   # scale-down-delay-after-delete: 0s
   # scale-down-delay-after-failure: 3m
-  # scale-down-unneeded-time: 10m
-  # skip-nodes-with-system-pods: true
   # balancing-ignore-label_1: first-label-to-ignore
   # balancing-ignore-label_2: second-label-to-ignore
 
