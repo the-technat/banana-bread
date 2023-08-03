@@ -3,7 +3,7 @@ locals {
   region          = "sa-east-1" # zurich has not yet all available instance types + a lab should be as cheap as possible
   cluster_name    = "banana-bread"
   cluster_version = "1.27"
-  account_id      = "298410952490"
+  account_id      = "296119450228"
 
   # Networking
   vpc_name      = "banana-bread"
