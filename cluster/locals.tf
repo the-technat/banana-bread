@@ -9,7 +9,8 @@ locals {
   min_node_size        = 0
   max_node_size        = 5
   instance_types_amd64 = ["t3a.medium", "t3.medium", "t2.medium"]
-  instance_types_arm64 = ["t4g.medium", "c6g.large", "c6gd.large", "c6gn.large"]
+  # instance_types_arm64 = ["t4g.medium", "c6g.large", "c6gd.large", "c6gn.large"]
+  instance_types_arm64 = ["t4g.medium"]
   volume_type          = "gp3"
   volume_size          = 20
 
