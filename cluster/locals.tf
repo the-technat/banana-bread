@@ -1,16 +1,21 @@
 locals {
   # General
-  region          = "sa-east-1" # zurich has not yet all available instance types + a lab should be as cheap as possible
+  region          = "eu-west-1" # zurich has not yet all available instance types + a lab should be as cheap as possible
   cluster_name    = "banana-bread"
   cluster_version = "1.27"
   account_id      = "296119450228"
 
   # Networking
-  vpc_name      = "banana-bread"
-  vpc_cidr      = "10.123.0.0/16"
-  dns_zone      = "aws.alleaffengaffen.ch"
-  ingress_class = "nginx"
-  azs           = slice(data.aws_availability_zones.available.names, 0, 3)
+  vpc_name        = "banana-bread"
+  vpc_cidr        = "10.123.0.0/16"
+  dns_zone        = "aws.alleaffengaffen.ch"
+  create_dns_zone = true # NS records still have to be added manually
+  ingress_class   = "nginx"
+  azs             = slice(data.aws_availability_zones.available.names, 0, 3)
+
+  # GitOps
+  sync_options = ["ServerSideApply=true", "PruneLast=true", "ApplyOutOfSyncOnly=true", "PrunePropagationPolicy=foreground", "CreateNamespace=false"]
+
 
   # IAM
   acme_mail = "banane@alleaffengaffen.ch"

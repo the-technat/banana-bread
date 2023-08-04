@@ -19,8 +19,7 @@ resource "helm_release" "aws_load_balancer_controller" {
   ]
 
   depends_on = [
-    module.eks,
-    helm_release.cilium,
+    argocd_application.cluster_autoscaler,
     module.aws_load_balancer_controller_irsa
   ]
 }

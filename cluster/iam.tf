@@ -16,6 +16,7 @@ resource "aws_iam_policy" "cluster_admin" {
           "cloudwatch:*",
           "logs:*",
           "ssm:*",
+          "tag:*"
         ],
         Resource = "*"
       },

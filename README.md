@@ -51,11 +51,12 @@ Here are the steps required to get this deployed:
 
 1. Create an Account in the [Terraform Cloud](https://app.terraform.io)
 2. Create an [AWS Account](https://aws.amazon.com)
-3. Create a public Route53 DNS Zone 
 4. Create a new IAM user, assign it the `AdministratorAccess` role and generate a pair of Access keys
 5. Create a new Terraform Workspace, configure the VCS-driven workflow and add two environment variables `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY`
 6. Adjust `cluster/locals.tf` according your preferences / environment
-6. Start your first run (won't be done automatically)
+7. Start your first run (won't be done automatically)
+8. Add the NS records for the DNS zone to where they belong (required in order for Web UIs to work)
+
 
 #### IAM Workflow
 

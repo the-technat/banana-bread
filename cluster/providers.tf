@@ -25,10 +25,8 @@ provider "helm" {
 }
 
 provider "argocd" {
-  server_addr                 = "" # port-forward
   username                    = "admin"
   password                    = random_password.argocd.result
-  port_forward                = true
   port_forward_with_namespace = "argocd"
   plain_text                  = true
   insecure                    = true

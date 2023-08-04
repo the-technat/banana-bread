@@ -1,5 +1,20 @@
 ##########
+# Route53
+##########
+resource "aws_route53_zone" "main" {
+  count = local.create_dns_zone == true ? 1 : 0
+
+  name          = local.dns_zone
+  comment       = "DNS Zone used for banana-bread"
+  force_destroy = true
+
+  tags = local.tags
+}
+
+
+##########
 # external-dns
+# sync DNS from the cluster to route53
 ##########
 resource "helm_release" "external_dns" {
   name             = "external-dns"
@@ -18,8 +33,7 @@ resource "helm_release" "external_dns" {
   ]
 
   depends_on = [
-    module.eks,
-    helm_release.cilium,
+    argocd_application.cluster_autoscaler,
     module.aws_external_dns_irsa
   ]
 }
