@@ -1,5 +1,6 @@
 controller:
   name: controller
+  kind: DaemonSet
   ingressClass: ${class}
   ingressClassResource:
     name: ${class}
