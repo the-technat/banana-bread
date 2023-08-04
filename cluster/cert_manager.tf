@@ -15,9 +15,8 @@ resource "helm_release" "cert_manager" {
   ]
 
   depends_on = [
-    module.eks,
-    helm_release.cilium,
-    kubernetes_priority_class_v1.infra
+    argocd_application.cluster_autoscaler,
+    kubernetes_priority_class_v1.infra,
   ]
 }
 

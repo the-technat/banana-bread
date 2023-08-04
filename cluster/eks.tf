@@ -46,6 +46,7 @@ module "eks" {
 
   # Networking
   vpc_id                         = module.vpc.vpc_id
+  cluster_service_ipv4_cidr      = local.cluster_service_cidr
   subnet_ids                     = module.vpc.private_subnets
   cluster_endpoint_public_access = true
   create_cluster_security_group  = false # we just use the eks-managed SG
@@ -92,10 +93,10 @@ module "eks" {
     # Compute
     ami_type       = "AL2_ARM_64"
     ami_id         = data.aws_ami.eks_default_arm.image_id
-    instance_types = ["t4g.medium", "c6g.large", "c6gd.large", "c6gn.large"]
+    instance_types = local.instance_types_arm64
     capacity_type  = "SPOT" # is it a lab or not?
-    min_size       = 0
-    max_size       = 5
+    min_size       = local.min_node_size
+    max_size       = local.max_node_size
     desired_size   = 1
 
     # Networking
@@ -111,8 +112,8 @@ module "eks" {
       xvda = {
         device_name = "/dev/xvda"
         ebs = {
-          volume_size           = 20
-          volume_type           = "gp3"
+          volume_size           = local.volume_size
+          volume_type           = local.volume_type
           iops                  = 3000 # default for gp3
           throughput            = 150  # default for gp3
           encrypted             = true
@@ -132,10 +133,6 @@ module "eks" {
     // otherwise the nodes don't join
     // setting also assume the default eks image is used
     enable_bootstrap_user_data = true
-
-    tags = {
-      "autoscaling/enabled" = "foo"
-    }
 
   }
 
@@ -158,7 +155,7 @@ module "eks" {
       subnet_ids     = [module.vpc.private_subnets[0]]
       ami_type       = "AL2_x86_64"
       ami_id         = data.aws_ami.eks_default.image_id
-      instance_types = ["t3a.medium", "t3.medium", "t2.medium"]
+      instance_types = local.instance_types_amd64
       desired_size   = 0 # who needs AMD64?
       taints = [
         {
@@ -173,7 +170,7 @@ module "eks" {
       subnet_ids     = [module.vpc.private_subnets[1]]
       ami_type       = "AL2_x86_64"
       ami_id         = data.aws_ami.eks_default.image_id
-      instance_types = ["t3a.medium", "t3.medium", "t2.medium"]
+      instance_types = local.instance_types_amd64
       desired_size   = 0 # who needs AMD64?
       taints = [
         {
@@ -188,7 +185,7 @@ module "eks" {
       subnet_ids     = [module.vpc.private_subnets[2]]
       ami_type       = "AL2_x86_64"
       ami_id         = data.aws_ami.eks_default.image_id
-      instance_types = ["t3a.medium", "t3.medium", "t2.medium"]
+      instance_types = local.instance_types_amd64
       desired_size   = 0 # who needs AMD64?
       taints = [
         {
@@ -286,6 +283,8 @@ module "ebs_kms_key" {
   key_owners = [aws_iam_role.cluster_admin.arn, data.aws_caller_identity.current.arn, "arn:aws:iam::${local.account_id}:user/nuker"]
   key_service_roles_for_autoscaling = [
     # required for the ASG to manage encrypted volumes for nodes
+    # note that https://docs.aws.amazon.com/autoscaling/ec2/userguide/autoscaling-service-linked-role.html
+    # if you get errors about a malformed policy the first time using this
     "arn:aws:iam::${local.account_id}:role/aws-service-role/autoscaling.amazonaws.com/AWSServiceRoleForAutoScaling",
     # required for the cluster / persistentvolume-controller to create encrypted PVCs
     module.eks.cluster_iam_role_arn,

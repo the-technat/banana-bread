@@ -14,7 +14,6 @@ resource "helm_release" "metrics_server" {
   ]
 
   depends_on = [
-    module.eks,
-    helm_release.cilium,
+    argocd_application.cluster_autoscaler,
   ]
 }

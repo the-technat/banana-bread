@@ -1,32 +1,6 @@
-resource "aws_iam_policy" "cluster_admin" {
-  name        = "EKSClusterAdminPolicy"
-  path        = "/"
-  description = "All permissions an EKS cluster admin needs"
-
-  policy = jsonencode({
-    Version = "2012-10-17",
-    Statement = [
-      {
-        Effect = "Allow",
-        Action = [
-          "eks:*",
-          "ec2:*",
-          "vpc:*",
-          "kms:*",
-          "cloudwatch:*",
-          "logs:*",
-          "ssm:*",
-          "tag:*"
-        ],
-        Resource = "*"
-      },
-    ]
-  })
-}
-
-resource "aws_iam_role_policy_attachment" "cluster_admin" {
+resource "aws_iam_role_policy_attachment" "account_admin" {
   role       = aws_iam_role.cluster_admin.name
-  policy_arn = aws_iam_policy.cluster_admin.arn
+  policy_arn = "arn:aws:iam::aws:policy/AdministratorAccess"
 }
 
 resource "aws_iam_role" "cluster_admin" {

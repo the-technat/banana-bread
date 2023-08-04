@@ -20,23 +20,18 @@ resource "argocd_application" "cluster_autoscaler" {
       target_revision = "9.29.0"
       helm {
         release_name = "cluster-autoscaler"
-        value_files  = ["${path.module}/helm_values/cluster_autoscaler.yaml"]
-        parameter {
-          name  = "awsRegion"
-          value = local.region
-        }
-        parameter {
-          name  = "autoDiscovery.clusterName"
-          value = local.cluster_name
-        }
-        parameter {
-          name  = "rbac.serviceAccount.annotations.eks\\.amazonaws\\.com/role-arn"
-          value = module.aws_cluster_autoscaler_irsa.iam_role_arn
-        }
-        parameter {
-          name  = "autoDiscovery.tags.autoscaling/enabled"
-          value = "foo"
-        }
+        values = tostring(templatefile("${path.module}/helm_values/cluster_autoscaler.yaml", {
+          cluster_name = local.cluster_name
+          region       = local.region
+          role_arn     = module.aws_cluster_autoscaler_irsa.iam_role_arn
+          min_size     = local.min_node_size
+          max_size     = local.max_node_size
+          autoscaling_groups = flatten([
+            for node_group_key, node_group in module.eks.eks_managed_node_groups : [
+              node_group.node_group_autoscaling_group_names[*]
+            ]
+          ])
+        }))
       }
     }
     sync_policy {

@@ -1,9 +1,13 @@
-awsRegion: "" # set by argocd parameters
+awsRegion: ${region}
 cloudProvider: aws
 priorityClassName: "infra"
-autoDiscovery:
-  clusterName: "" # set by argocd parameters
-  tags: [] # set by argocd parameters
+
+autoscalingGroups:
+%{ for asg in autoscaling_groups ~}
+- name: ${asg}
+  minSize: ${min_size}
+  maxSize: ${max_size}
+%{ endfor ~}
 
 fullnameOverride: "cluster-autoscaler"
 
@@ -52,7 +56,7 @@ rbac:
   serviceAccount:
     name: "cluster-autoscaler"
     annotations:
-      eks.amazonaws.com/role-arn: "" # set by argocd parameters
+      eks.amazonaws.com/role-arn: ${role_arn}
 
 resources:
   limits:
