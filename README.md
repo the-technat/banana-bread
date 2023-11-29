@@ -1,5 +1,7 @@
 # banana-bread
 
+** See [grapes](https://github.com/the-technat/grapes) for a more up-to-date version of this. **
+
 The last homelab I'll ever build
 
 ## What is this?
